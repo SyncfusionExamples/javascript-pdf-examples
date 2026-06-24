@@ -1,7 +1,7 @@
 JavaScript PDF library 
 -------------------------------------
 
-The [JavaScript PDF library](https://www.syncfusion.com/document-sdk/javascript-pdf-library) (Essential&reg; PDF) is a lightweight, high-performance, and feature-rich non-UI solution written natively in JavaScript for generating PDF documents in both Node.js and browser environments. It enables developers to seamlessly integrate robust PDF functionality into their applications for creating, reading, and editing PDF documents without relying on Adobe Acrobat. Designed to work across JavaScript, TypeScript, Angular, React, Vue, ASP.NET Core, and ASP.NET MVC platforms, the library supports programmatic generation of PDF reports with rich content, including formatted text, images, shapes, hyperlinks, and lists, while complying with PDF 1.7 (ISO 32000-1) and the latest PDF 2.0 (ISO 32000-2) standards to ensure high-quality, compatible PDF document processing.
+The [JavaScript PDF library](https://www.syncfusion.com/document-sdk/javascript-pdf-library) is a lightweight, high-performance, and feature-rich non-UI solution written natively in JavaScript for generating PDF documents in both Node.js and browser environments. It enables developers to seamlessly integrate robust PDF functionality into their applications for creating, reading, and editing PDF documents without relying on Adobe Acrobat. Designed to work across JavaScript, TypeScript, Angular, React, Vue, ASP.NET Core, and ASP.NET MVC platforms, the library supports programmatic generation of PDF reports with rich content, including formatted text, images, shapes, hyperlinks, and lists, while complying with PDF 1.7 (ISO 32000-1) and the latest PDF 2.0 (ISO 32000-2) standards to ensure high-quality, compatible PDF document processing.
 
 Key Features 
 -------------------------------------- 
@@ -40,13 +40,13 @@ How to run the examples
 Resources 
 -----------
 
-*   **Product page:** [PDF Library](https://www.syncfusion.com/document-sdk/javascript-pdf-library)
-*   **Documentation page:** [JavaScript PDF library](https://help.syncfusion.com/document-processing/pdf/pdf-library/javascript/overview)
-*   **Online demo:** [JavaScript PDF library - Online demos](https://document.syncfusion.com/)
-*   **Blog:** [JavaScript PDF library - Blog](https://www.syncfusion.com/blogs/category/pdf)
-*   **Knowledge Base:** [JavaScript PDF library - Knowledge Base](https://www.syncfusion.com/kb/windowsforms/pdf)
-*   **EBooks:** [JavaScript PDF library - EBooks](https://www.syncfusion.com/succinctly-free-ebooks)
-*   **FAQ:** [JavaScript PDF library - FAQ](https://www.syncfusion.com/faq/)
+*   **Product page:** [Syncfusion&reg; JavaScript PDF Library](https://www.syncfusion.com/document-sdk/javascript-pdf-library)
+*   **Documentation page:** [Syncfusion&reg; JavaScript PDF Library - Documentation](https://help.syncfusion.com/document-processing/pdf/pdf-library/javascript/overview)
+*   **Online demo:** [Syncfusion&reg; JavaScript PDF library - Online demos](https://document.syncfusion.com/)
+*   **Blog:** [Syncfusion&reg; JavaScript PDF library - Blog](https://www.syncfusion.com/blogs/category/pdf)
+*   **Knowledge Base:** [Syncfusion&reg; JavaScript PDF library - Knowledge Base](https://support.syncfusion.com/kb/web/section/2525)
+*   **EBooks:** [Syncfusion&reg; JavaScript PDF library - EBooks](https://www.syncfusion.com/succinctly-free-ebooks)
+*   **FAQ:** [Syncfusion&reg; JavaScript PDF library - FAQ](https://www.syncfusion.com/faq/)
 
 Support and feedback
 --------------------
