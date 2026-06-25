@@ -1,0 +1,29 @@
+<head>
+    <!-- Syncfusion JavaScript PDF Library (CDN) -->
+    <script src="https://cdn.syncfusion.com/ej2/33.2.12/dist/ej2.min.js"></script>
+</head>
+<div class="container py-4">
+    <h1 class="h4 mb-3">Create PDF document</h1>
+    <p class="text-muted">Click the button to generate and download a PDF.</p>
+    <button id="btnCreatePdf" class="btn btn-primary">Generate PDF document</button>
+</div>
+<script>
+    document.getElementById('btnCreatePdf').addEventListener('click', function () {
+        // Create a new PDF document
+        var pdf = new ej.pdf.PdfDocument();
+        // Add a new page
+        var page = pdf.addPage();
+        // Get graphics from the page
+        var graphics = page.graphics;
+        // Set font
+        var font = pdf.embedFont(ej.pdf.PdfFontFamily.helvetica, 36, ej.pdf.PdfFontStyle.regular);
+        // Create a new black brush
+        var brush = new ej.pdf.PdfBrush({ r: 0, g: 0, b: 0 });
+        // Draw text
+        graphics.drawString('Hello World!!!', font, { x: 20, y: 20, width: graphics.clientSize.width - 20, height: 60 }, brush);
+        // Save and download PDF
+        pdf.save('Output.pdf');
+        // Destroy the PDF document instance
+        pdf.destroy();
+    });   
+</script>
