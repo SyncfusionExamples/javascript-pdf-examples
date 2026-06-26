@@ -1,16 +1,14 @@
-# Essential JS 2 QuickStart
+# How to Create or Generate PDF document in TypeScript
 
-This project is a skeleton application used to create [Essential JS 2](https://www.syncfusion.com/products/essential-js2) web application.
-
->This application uses the latest version of the [webpack-cli](https://webpack.js.org/api/cli/#commands). It requires node `v14.15.0` or higher.
+This project is a complete working application to create or generate PDF document using TypeScript.
 
 ## Getting Started
 
-To get started you need to clone the `ej2-quickstart` repository and navigate to `ej2-quickstart` location.
+To get started you need to clone the `ej2-pdf-quickstart` repository and navigate to `ej2-pdf-quickstart` location.
 
 ```
-git clone https://github.com/syncfusion/ej2-quickstart.git quickstart
-cd quickstart
+git clone https://github.com/SyncfusionExamples/javascript-pdf-examples.git ej-pdf-quickstart
+cd ej2-pdf-quickstart
 ```
 
 ## Installing
@@ -24,36 +22,6 @@ You can run the below command to install all dependent packages related to this 
 ```
 npm install
 ```
-
-## Testing
-
-This application is preconfigured with End-to-End testing and the test case is written in Jasmine.
-
-We run the test scripts with [Protractor](http://www.protractortest.org/#/) end-to-end test runner. The test case file can be found in the `e2e` folder.
-
-Protractor can interact with our web application and verify the test scripts.
-
-We have to install WebDriver and also need to ensure it is updated. Open a separate terminal and run the below npm script.
-
-```
-npm run update-webdriver
-```
-
-Open another terminal and run the below npm script. It will start web server to serve our application.
-
-```
-npm run serve
-```
-
-Once the web server is up and running, we can run the end-to-end tests using the below npm script
-
-```
-npm run test
-```
-
-> **Note:** Since Protractor is using the Selenium Standalone Server, the Java Development Kit (JDK) need to be installed in your local machine.
-
-If JDK is not installed in your local machine, you can download it from [here](http://www.oracle.com/technetwork/java/javase/downloads/index.html).
 
 ## Running
 
@@ -71,5 +39,5 @@ npm run start
 
 You can also refer the below resources to know more details about Essential JS 2 components.
 
-* [Pure JS Demos](http://ej2.syncfusion.com/demos/)
-* [Pure JS Documentation](http://ej2.syncfusion.com/documentation/)
+* [JavaScript PDF Library Demos](https://document.syncfusion.com/demos/pdf/javascript/#/tailwind3/pdf/default.html)
+* [JavaScript PDF Library Documentation](https://help.syncfusion.com/document-processing/pdf/pdf-library/javascript/overview)
