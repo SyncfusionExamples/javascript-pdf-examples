@@ -1,0 +1,23 @@
+<html>
+  <head>
+    <title>PDF Generator</title>
+  </head>
+  <body>
+    <h2>Generate PDF Example</h2>
+    <button onclick="generatePDF()">Create PDF</button>
+    <script>
+      async function generatePDF() {
+        const response = await fetch('/generate-pdf');
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'Output.pdf';
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        window.URL.revokeObjectURL(url);
+      }
+    </script>
+  </body>
+</html>
