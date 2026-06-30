@@ -1,4 +1,4 @@
-# How to Extract Image from PDF document in JavaScript
+# How to Extract Images from PDF document in JavaScript
 
 This project is a complete working application to extract imgaes from PDF document using JavaScript.
 
