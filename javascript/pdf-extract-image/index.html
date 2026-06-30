@@ -1,0 +1,79 @@
+<head>
+    <!-- Syncfusion JavaScript PDF Library (CDN) -->
+    <script src="https://cdn.syncfusion.com/ej2/33.2.12/dist/ej2.min.js"></script>
+</head>
+<div class="container py-4">
+    <h1 class="h4 mb-3">Extract Image from PDF document</h1>
+    <button id="extractbtn" class="btn btn-primary">Generate PDF document</button>
+</div>
+
+<script>
+    // Define the source PDF document for image extraction.
+    var templateUrl = 'https://cdn.syncfusion.com/content/pdf-resources/image-template.pdf';
+    var extractBtn = new ej.buttons.Button();
+    extractBtn.appendTo('#extractbtn');
+    // Extract images from PDF
+    extractBtn.element.onclick = function () {
+        readFromPdfResources(templateUrl)
+            .then(function (pdfBytes) {
+                // Load PDF document
+                var document = new ej.pdf.PdfDocument(pdfBytes);
+                // Create data extractor with canvas callback
+                var extractor = new ej.pdfdataextract.PdfDataExtractor(
+                    document,
+                    canvasRenderCallback
+                );
+                // Extract images from all pages
+                return extractor
+                    .extractImages({
+                        startPageIndex: 0,
+                        endPageIndex: document.pageCount - 1
+                    })
+                    .then(function (images) {
+                        if (images && images.length > 0) {
+                            // Take first extracted image
+                            var first = images[0];
+                            var blob = new Blob([first.data], { type: 'image/jpeg' });
+                            downloadBlob(blob, 'ExtractedImage.jpg');
+                        } else {
+                            console.warn('No images found in the document.');
+                        }
+                        // Cleanup PDF instance
+                        document.destroy();
+                    });
+            })
+            .catch(function (err) {
+                console.error('Extract Image failed:', err);
+            });
+    };
+
+    // Canvas callback required for image rendering
+    function canvasRenderCallback() {
+        var canvas = document.createElement('canvas');
+        return { canvas: canvas, applicationPlatform: undefined };
+    }
+    // Helper to download Blob as file
+    function downloadBlob(blob, fileName) {
+        var url = URL.createObjectURL(blob);
+        var a = document.createElement('a');
+        a.href = url;
+        a.download = fileName;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    }
+    // Fetch PDF as byte array
+    function readFromPdfResources(url) {
+        return fetch(url, { cache: 'no-cache' })
+            .then(function (res) {
+                if (!res.ok) {
+                    throw new Error('Failed to fetch PDF');
+                }
+                return res.arrayBuffer();
+            })
+            .then(function (buf) {
+                return new Uint8Array(buf);
+            });
+    }
+</script>
