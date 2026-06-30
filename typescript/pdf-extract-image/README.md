@@ -1,6 +1,6 @@
-# How to Extract Image from PDF document in TypeScript
+# How to Extract Images from PDF document in TypeScript
 
-This project is a complete working application to extract image from PDF document using TypeScript.
+This project is a complete working application to extract images from PDF document using TypeScript.
 
 ## Getting Started
 
