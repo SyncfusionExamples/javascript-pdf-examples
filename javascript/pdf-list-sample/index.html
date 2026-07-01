@@ -1,0 +1,138 @@
+<head>
+    <!-- Syncfusion JavaScript PDF Library (CDN) -->
+    <script src="https://cdn.syncfusion.com/ej2/33.2.12/dist/ej2.min.js"></script>
+</head>
+
+<div class="container py-4">
+    <h1 class="h4 mb-3">Add Ordered and Unordered lists into PDF document</h1>
+    <button id="orderbtn" class="btn btn-primary" style="margin: 3%;">Add ordered list</button>
+    <button id="unorderbtn" class="btn btn-primary">Add unordered list</button>
+</div>
+
+<script>
+    // Create and initialize the Ordered List button
+    var orderButton = new ej.buttons.Button();
+    orderButton.appendTo('#orderbtn');
+    // Generate an Ordered List PDF when the button is clicked
+    orderButton.element.onclick = function () {
+        // Create a new PDF document
+        var pdf = new ej.pdf.PdfDocument();
+        // Add a page to the PDF document
+        var page = pdf.addPage();
+        // Embed font for the document heading
+        var headerFont = pdf.embedFont(
+            ej.pdf.PdfFontFamily.helvetica,
+            14,
+            ej.pdf.PdfFontStyle.bold
+        );
+        // Embed font for list items
+        var listFont = pdf.embedFont(
+            ej.pdf.PdfFontFamily.timesRoman,
+            10,
+            ej.pdf.PdfFontStyle.regular
+        );
+        // Draw the heading text on the page
+        page.graphics.drawString(
+            'Ordered List',
+            headerFont,
+            { x: 200, y: 10, width: 300, height: 30 }
+        );
+        // Create string formatting and set line spacing
+        var format = new ej.pdf.PdfStringFormat();
+        format.lineSpacing = 10;
+        // Define the ordered list items
+        var orderedCollection = new ej.pdf.PdfListItemCollection([
+            'Essential Tools',
+            'Essential Grid',
+            'Essential Chart',
+            'Essential Edit',
+            'Essential Diagram',
+            'Essential XlsIO',
+            'Essential PDF',
+            'Essential DocIO'
+        ]);
+        // Create an ordered list with formatting options
+        var orderedList = new ej.pdf.PdfOrderedList(
+            orderedCollection,
+            {
+                font: listFont,
+                format: format,
+                indent: 20,
+                textIndent: 10
+            }
+        );
+        // Draw the ordered list on the page
+        orderedList.draw(page, {
+            x: 10,
+            y: 60,
+            width: page.graphics.clientSize.width,
+            height: page.graphics.clientSize.height - 60
+        });
+        // Save the generated PDF file
+        pdf.save('OrderedList.pdf');
+        // Destroy the PDF document instance to release resources
+        pdf.destroy();
+    };
+
+    // Create and initialize the Unordered List button
+    var unorderButton = new ej.buttons.Button();
+    unorderButton.appendTo('#unorderbtn');
+    // Generate an Unordered List PDF when the button is clicked
+    unorderButton.element.onclick = function () {
+        // Create a new PDF document
+        var pdf = new ej.pdf.PdfDocument();
+        // Add a page to the PDF document
+        var page = pdf.addPage();
+        // Embed font for the document heading
+        var headerFont = pdf.embedFont(
+            ej.pdf.PdfFontFamily.helvetica,
+            14,
+            ej.pdf.PdfFontStyle.bold
+        );
+        // Embed font for list items
+        var listFont = pdf.embedFont(
+            ej.pdf.PdfFontFamily.timesRoman,
+            10,
+            ej.pdf.PdfFontStyle.regular
+        );
+        // Draw the heading text on the page
+        page.graphics.drawString(
+            'Unordered List',
+            headerFont,
+            { x: 190, y: 10, width: 300, height: 30 }
+        );
+        // Create string formatting and set line spacing
+        var format = new ej.pdf.PdfStringFormat();
+        format.lineSpacing = 10;
+        // Define the unordered list items
+        var unorderedCollection = new ej.pdf.PdfListItemCollection([
+            'Essential PDF',
+            'Essential DocIO',
+            'Essential XlsIO',
+            'Essential Grid',
+            'Essential Chart'
+        ]);
+        // Create an unordered list with disk bullet style
+        var unorderedList = new ej.pdf.PdfUnorderedList(
+            unorderedCollection,
+            {
+                font: listFont,
+                format: format,
+                style: ej.pdf.PdfUnorderedListStyle.disk,
+                indent: 20,
+                textIndent: 10
+            }
+        );
+        // Draw the unordered list on the page
+        unorderedList.draw(page, {
+            x: 10,
+            y: 60,
+            width: page.graphics.clientSize.width,
+            height: page.graphics.clientSize.height - 60
+        });
+        // Save the generated PDF file
+        pdf.save('UnorderedList.pdf');
+        // Destroy the PDF document instance to release resources
+        pdf.destroy();
+    };
+</script>
