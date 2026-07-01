@@ -1,0 +1,48 @@
+<head>
+    <!-- Syncfusion JavaScript PDF Library (CDN) -->
+    <script src="https://cdn.syncfusion.com/ej2/33.2.12/dist/ej2.min.js"></script>
+</head>
+<div class="container py-4">
+    <h1 class="h4 mb-3">Importing Pages</h1>
+    <button id="importBtn" class="btn btn-primary">Generate PDF document</button>
+</div>
+
+<script>
+    var importBtn = new ej.buttons.Button();
+    importBtn.appendTo('#importBtn');
+    // Click handler to merge PDFs
+    importBtn.element.onclick = function () {
+        // Fetch the source PDF as bytes
+        fetchAsUint8Array(templateUrl1).then(function (pdfBytes1) {
+            fetchAsUint8Array(templateUrl2).then(function (pdfBytes2) {
+                // Create two PDF document instances from the same source
+                var doc1 = new ej.pdf.PdfDocument(pdfBytes1);
+                var doc2 = new ej.pdf.PdfDocument(pdfBytes2);
+                // Import all pages from doc2 into doc1
+                doc1.importPageRange(doc2, 0, doc2.pageCount - 1);
+                // Save merged PDF
+                doc1.save(outputPdfName);
+                // Cleanup
+                doc1.destroy();
+                doc2.destroy();
+            })
+        }).catch(function (err) {
+            // Error handling
+            console.error('Merge PDFs failed:', err);
+        });
+    };
+    // Source PDF URL
+    var templateUrl1 = 'https://cdn.syncfusion.com/content/pdf-resources/pdf-succinctly.pdf';
+    var templateUrl2 = 'https://cdn.syncfusion.com/content/pdf-resources/syncfusion-brochure.pdf';
+    // Output PDF name
+    var outputPdfName = 'MergedPDF.pdf';
+    // Helper: fetch URL and return Uint8Array
+    var fetchAsUint8Array = function (url) {
+        return fetch(url, { cache: 'no-cache' }).then(function (res) {
+            if (!res.ok) throw new Error('Failed to fetch ' + url + ': ' + res.status + ' ' + res.statusText);
+            return res.arrayBuffer();
+        }).then(function (buf) {
+            return new Uint8Array(buf);
+        });
+    };
+</script>
