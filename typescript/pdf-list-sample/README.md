@@ -7,8 +7,8 @@ This project is a complete working application to add ordered and unordered list
 To get started you need to clone the `ej2-pdf-quickstart` repository and navigate to `ej2-pdf-quickstart` location.
 
 ```
-git clone https://github.com/SyncfusionExamples/javascript-pdf-examples.git pdf-extract-image
-cd pdf-extract-image
+git clone https://github.com/SyncfusionExamples/javascript-pdf-examples.git pdf-list-sample
+cd pdf-list-sample
 ```
 
 ## Installing

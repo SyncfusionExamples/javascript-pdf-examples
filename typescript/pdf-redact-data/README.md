@@ -1,14 +1,14 @@
-# How to Extract Text from PDF document in TypeScript
+# How to Redact data in a PDF document in TypeScript
 
-This project is a complete working application to extract Text from PDF document using TypeScript.
+This project is a complete working application to redact data in a PDF document using TypeScript.
 
 ## Getting Started
 
 To get started you need to clone the `ej2-pdf-quickstart` repository and navigate to `ej2-pdf-quickstart` location.
 
 ```
-git clone https://github.com/SyncfusionExamples/javascript-pdf-examples.git pdf-extract-text
-cd pdf-extract-text
+git clone https://github.com/SyncfusionExamples/javascript-pdf-examples.git pdf-redact-data
+cd pdf-redact-data
 ```
 
 ## Installing
