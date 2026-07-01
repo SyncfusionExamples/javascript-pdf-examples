@@ -1,0 +1,64 @@
+<head>
+    <!-- Syncfusion JavaScript PDF Library (CDN) -->
+    <script src="https://cdn.syncfusion.com/ej2/33.2.12/dist/ej2.min.js"></script>
+</head>
+<div class="container py-4">
+    <h1 class="h4 mb-3">Extract Text from PDF document</h1>
+    <button id="extractbtn" class="btn btn-primary">Extract Text</button>
+</div>
+
+<script>
+    // Template PDF URL
+    var templateURL = 'https://cdn.syncfusion.com/content/pdf-resources/pdf-succinctly.pdf';
+    var extractBtn = new ej.buttons.Button();
+    extractBtn.appendTo('#extractbtn');
+    //  Extract Text Button Click
+    extractBtn.element.onclick = function () {
+        // Fetch PDF bytes using Promise
+        readFromPdfResources(templateURL)
+            .then(function (pdfBytes) {
+                // Load PDF document
+                var pdf = new ej.pdf.PdfDocument(pdfBytes);
+                // Initialize text extractor
+                var extractor = new ej.pdfdataextract.PdfDataExtractor(pdf);
+                // Extract text from all pages
+                var text = extractor.extractText({
+                    startPageIndex: 0,
+                    endPageIndex: pdf.pageCount - 1
+                });
+                // Clean up PDF instance
+                pdf.destroy();
+                // Download extracted text as .txt file
+                downloadBlob(new Blob([text], { type: 'text/plain' }), 'Sample.txt');
+            })
+            .catch(function (err) {
+                console.error('Extract Text failed:', err);
+            });
+    };
+
+    //   Fetch PDF from URL and return Uint8Array
+    function readFromPdfResources(url) {
+        return fetch(url)
+            .then(function (res) {
+                if (!res.ok) {
+                    throw new Error('Failed to fetch PDF: ' + res.status + ' ' + res.statusText);
+                }
+                return res.arrayBuffer();
+            })
+            .then(function (buf) {
+                return new Uint8Array(buf);
+            });
+    }
+    
+    //  Helper function to download a Blob as a file
+    function downloadBlob(blob, fileName) {
+        var url = URL.createObjectURL(blob);
+        var a = document.createElement('a');
+        a.href = url;
+        a.download = fileName;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    }
+</script>
