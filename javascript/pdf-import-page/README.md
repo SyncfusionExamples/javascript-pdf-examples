@@ -1,10 +1,10 @@
-# How to Add Ordered and Unordered list in PDF document in JavaScript
+# How to Import Pages from One PDF to Another PDF document in JavaScript
 
-This project is a complete working application to add ordered and unordered lists in PDF document using JavaScript.
+This project is a complete working application to import pages from one PDF to another PDF document using JavaScript.
 
 ## Getting Started
 
-To get started you need to clone the `pdf-list-sample` repository.
+To get started you need to clone the `pdf-import-page` repository.
 
 ```
 git clone https://github.com/SyncfusionExamples/javascript-pdf-examples.git

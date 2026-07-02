@@ -1,14 +1,14 @@
-# How to Extract Text from PDF document in TypeScript
+# How to Import Pages from One PDF to Another PDF document in TypeScript
 
-This project is a complete working application to extract Text from PDF document using TypeScript.
+This project is a complete working application to import pages from one PDF to another PDF document using TypeScript.
 
 ## Getting Started
 
-To get started you need to clone the `pdf-extract-text` repository and navigate to `pdf-extract-text` location.
+To get started you need to clone the `pdf-import-page` repository and navigate to `pdf-import-page` location.
 
 ```
-git clone https://github.com/SyncfusionExamples/javascript-pdf-examples.git pdf-extract-text
-cd pdf-extract-text
+git clone https://github.com/SyncfusionExamples/javascript-pdf-examples.git pdf-import-page
+cd pdf-import-page
 ```
 
 ## Installing

@@ -4,7 +4,7 @@ This project is a complete working application to extract imgaes from PDF docume
 
 ## Getting Started
 
-To get started you need to clone the `ej2-pdf-quickstart` repository.
+To get started you need to clone the `pdf-extract-image` repository.
 
 ```
 git clone https://github.com/SyncfusionExamples/javascript-pdf-examples.git

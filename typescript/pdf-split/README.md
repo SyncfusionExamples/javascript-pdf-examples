@@ -1,14 +1,14 @@
-# How to Extract Text from PDF document in TypeScript
+# How to Split a PDF into Multiple PDF Files in TypeScript
 
-This project is a complete working application to extract Text from PDF document using TypeScript.
+This project is a complete working application to split a pdf into multiple pdf files using TypeScript.
 
 ## Getting Started
 
-To get started you need to clone the `pdf-extract-text` repository and navigate to `pdf-extract-text` location.
+To get started you need to clone the `pdf-split` repository and navigate to `pdf-split` location.
 
 ```
-git clone https://github.com/SyncfusionExamples/javascript-pdf-examples.git pdf-extract-text
-cd pdf-extract-text
+git clone https://github.com/SyncfusionExamples/javascript-pdf-examples.git pdf-split
+cd pdf-split
 ```
 
 ## Installing
