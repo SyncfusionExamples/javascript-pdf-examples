@@ -4,7 +4,7 @@ This project is a complete working application to redact data in a PDF document 
 
 ## Getting Started
 
-To get started you need to clone the `ej2-pdf-quickstart` repository and navigate to `ej2-pdf-quickstart` location.
+To get started you need to clone the `pdf-redact-data` repository and navigate to `pdf-redact-data` location.
 
 ```
 git clone https://github.com/SyncfusionExamples/javascript-pdf-examples.git pdf-redact-data

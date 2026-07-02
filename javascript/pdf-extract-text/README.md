@@ -4,7 +4,7 @@ This project is a complete working application to extract Text from PDF document
 
 ## Getting Started
 
-To get started you need to clone the `ej2-pdf-quickstart` repository.
+To get started you need to clone the `pdf-extract-text` repository.
 
 ```
 git clone https://github.com/SyncfusionExamples/javascript-pdf-examples.git

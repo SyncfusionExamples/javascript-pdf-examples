@@ -1,14 +1,14 @@
-# How to Import Pages from One PDF to Another PDF document in TypeScript
+# How to Split a PDF into Multiple PDF Files in TypeScript
 
-This project is a complete working application to import pages from one PDF to another PDF document using TypeScript.
+This project is a complete working application to split a pdf into multiple pdf files using TypeScript.
 
 ## Getting Started
 
-To get started you need to clone the `pdf-import-page` repository and navigate to `pdf-import-page` location.
+To get started you need to clone the `pdf-split` repository and navigate to `pdf-split` location.
 
 ```
-git clone https://github.com/SyncfusionExamples/javascript-pdf-examples.git pdf-import-page
-cd pdf-import-page
+git clone https://github.com/SyncfusionExamples/javascript-pdf-examples.git pdf-split
+cd pdf-split
 ```
 
 ## Installing

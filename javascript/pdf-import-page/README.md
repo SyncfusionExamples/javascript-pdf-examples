@@ -4,7 +4,7 @@ This project is a complete working application to import pages from one PDF to a
 
 ## Getting Started
 
-To get started you need to clone the `ej2-pdf-quickstart` repository.
+To get started you need to clone the `pdf-import-page` repository.
 
 ```
 git clone https://github.com/SyncfusionExamples/javascript-pdf-examples.git
