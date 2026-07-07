@@ -9,56 +9,46 @@
 
 <script>
     var redactbtn = new ej.buttons.Button({}, '#redactbtn');
-    redactbtn.element.onclick = redactPdfFromResource;
-    // Redact predefined regions from resource PDF
-    function redactPdfFromResource() {
-        var rects = [
-            { x: 70, y: 120, width: 200, height: 80 },
-            { x: 400, y: 150, width: 100, height: 30 }
-        ];
-        readFromPdfResources(input)
+    redactbtn.element.onclick = redactPdf;
+	// Redact predefined regions from resource PDF
+    function redactPdf() {
+        readFromUrl(input)
             .then(function (pdfData) {
-                redactPdf(pdfData, rects);
+				var data = pdfData instanceof Uint8Array ? pdfData : new Uint8Array(pdfData);
+				// Load PDF data
+                var pdf = new ej.pdf.PdfDocument(data);
+				// Rectangle bounds to apply redaction
+				var rects = [{ x: 70, y: 120, width: 200, height: 80 }, { x: 400, y: 150, width: 100, height: 30 }];
+				// Create PDF redactor instance
+				var redactor = new ej.pdfdataextract.PdfRedactor(pdf);
+				// Define redaction regions to apply redaction on PDF pages
+				var regions = rects.map(function (r) {
+					var region = new ej.pdfdataextract.PdfRedactionRegion(0, {
+						x: r.x,
+						y: r.y,
+						width: r.width,
+						height: r.height
+					});
+					region.fillColor = { r: 0, g: 0, b: 0 };
+					return region;
+				});
+				// Add redaction regions to the collection
+				redactor.add(regions);
+				// Apply redaction
+				redactor.redactSync();
+				// Save redacted PDF document
+				pdf.save('Redaction.pdf');
+				pdf.destroy();
             })
             .catch(function (err) {
                 console.error(err);
                 alert('Failed to redact the resource PDF.');
             });
     }
-    // Core redaction logic
-    function redactPdf(pdfBytes, rect) {
-        var bytes = pdfBytes instanceof Uint8Array ? pdfBytes : new Uint8Array(pdfBytes);
-        var pdf = new ej.pdf.PdfDocument(bytes);
-        var rects = Array.isArray(rect) ? rect : [rect];
-        var redactor = new ej.pdfdataextract.PdfRedactor(pdf);
-        var regions = rects.map(function (r) {
-            var region = new ej.pdfdataextract.PdfRedactionRegion(0, {
-                x: r.x,
-                y: r.y,
-                width: r.width,
-                height: r.height
-            });
-            region.fillColor = { r: 0, g: 0, b: 0 };
-            return region;
-        });
-        redactor.add(regions);
-        redactor.redactSync();
-        pdf.save('Redaction.pdf');
-        pdf.destroy();
-    }
-    function downloadPdf(bytes, fileName) {
-        var blob = new Blob([bytes], { type: 'application/pdf' });
-        var url = URL.createObjectURL(blob);
-        var a = document.createElement('a');
-        a.href = url;
-        a.download = fileName;
-        a.click();
-        URL.revokeObjectURL(url);
-    }
-    // Template PDF URL
+	// Template PDF URL
     var input = 'https://cdn.syncfusion.com/content/pdf-resources/credit_card_statement.pdf';
     // Fetch helper
-    function readFromPdfResources(url) {
+    function readFromUrl(url) {
         return fetch(url, { cache: 'no-cache' })
             .then(function (res) {
                 if (!res.ok) {

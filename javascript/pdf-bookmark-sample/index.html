@@ -1,0 +1,141 @@
+<head>
+    <!-- Syncfusion JavaScript PDF Library (CDN) -->
+    <script src="https://cdn.syncfusion.com/ej2/33.2.12/dist/ej2.min.js"></script>
+</head>
+<div class="container py-4">
+    <h1 class="h4 mb-3">Add and Remove Bookmarks</h1>
+    <button id="addBtn" class="btn btn-primary">Add Bookmarks</button>
+    <button id="removeBtn" class="btn btn-primary">Remove Bookmarks</button>
+</div>
+
+<script>
+    // Add Bookmark functionality
+    var addBtn = new ej.buttons.Button({}, '#addBtn');
+    addBtn.element.onclick = addBookmarks;
+    //Method to add bookmark on PDF
+    function addBookmarks() {
+        // Create a new PDF document instance
+        let document = new ej.pdf.PdfDocument();
+        // Loop to create three chapters in the PDF
+        for (var i = 1; i <= 3; i++) {
+            // Add a new page for each chapter
+            var page = document.addPage();
+            // Define chapter title text
+            var chapterTitle = 'Chapter ' + i;
+            // Draw the chapter title on the page in red color
+            drawTitle(page, chapterTitle, 10, 10, new ej.pdf.PdfBrush({ r: 255, g: 0, b: 0 }));
+            // Get the document-level bookmarks collection
+            var bookmarks = document.bookmarks;
+            // Add a bookmark for the chapter
+            var chapter = bookmarks.add(chapterTitle);
+            // Set the destination of the chapter bookmark
+            chapter.destination = new ej.pdf.PdfDestination(page, { x: 10, y: 10 });
+            // Set the chapter bookmark color
+            chapter.color = { r: 255, g: 0, b: 0 };
+            // Define section titles under the chapter
+            var sec1Title = 'Section ' + i + '.1';
+            var sec2Title = 'Section ' + i + '.2';
+            // Draw section titles on the page in green color
+            drawTitle(page, sec1Title, 30, 30, new ej.pdf.PdfBrush({ r: 0, g: 255, b: 0 }));
+            drawTitle(page, sec2Title, 30, 400, new ej.pdf.PdfBrush({ r: 0, g: 255, b: 0 }));
+            // Add the first section bookmark under the chapter
+            var section1 = chapter.add(sec1Title);
+            section1.destination = new ej.pdf.PdfDestination(page, { x: 30, y: 30 });
+            section1.color = { r: 0, g: 128, b: 0 };
+            // Add the second section bookmark under the chapter
+            var section2 = chapter.add(sec2Title);
+            section2.destination = new ej.pdf.PdfDestination(page, { x: 30, y: 400 });
+            section2.color = { r: 0, g: 128, b: 0 };
+            // Define paragraph details for the first section
+            var subs1 = [
+                { t: 'Paragraph ' + i + '.1.1', pt: { x: 50, y: 50 } },
+                { t: 'Paragraph ' + i + '.1.2', pt: { x: 50, y: 150 } },
+                { t: 'Paragraph ' + i + '.1.3', pt: { x: 50, y: 250 } }
+            ];
+            // Draw paragraphs for section 1 and create corresponding bookmarks
+            for (var j = 0; j < subs1.length; j++) {
+                drawTitle(
+                    page,
+                    subs1[j].t,
+                    subs1[j].pt.x,
+                    subs1[j].pt.y,
+                    new ej.pdf.PdfBrush({ r: 0, g: 0, b: 255 })
+                );
+                var b1 = section1.add(subs1[j].t);
+                b1.destination = new ej.pdf.PdfDestination(page, subs1[j].pt);
+                b1.color = { r: 0, g: 0, b: 255 };
+            }
+            // Define paragraph details for the second section
+            var subs2 = [
+                { t: 'Paragraph ' + i + '.2.1', pt: { x: 50, y: 420 } },
+                { t: 'Paragraph ' + i + '.2.2', pt: { x: 50, y: 560 } },
+                { t: 'Paragraph ' + i + '.2.3', pt: { x: 50, y: 680 } }
+            ];
+            // Draw paragraphs for section 2 and create corresponding bookmarks
+            for (var k = 0; k < subs2.length; k++) {
+                drawTitle(
+                    page,
+                    subs2[k].t,
+                    subs2[k].pt.x,
+                    subs2[k].pt.y,
+                    new ej.pdf.PdfBrush({ r: 0, g: 0, b: 255 })
+                );
+                var b2 = section2.add(subs2[k].t);
+                b2.destination = new ej.pdf.PdfDestination(page, subs2[k].pt);
+                b2.color = { r: 0, g: 0, b: 255 };
+            }
+        }
+        // Save the generated PDF document to the client
+        document.save('AddBookmarks.pdf');
+        // Destroy the document instance to release memory
+        document.destroy();
+    }
+
+    // Remove Bookmark functionality
+    var removeBtn = new ej.buttons.Button({}, '#removeBtn');
+    removeBtn.element.onclick = removeBookmark;
+    var templateUrl = 'https://cdn.syncfusion.com/content/pdf-resources/bookmarks.pdf';
+    // Method to remove bookmark from existing PDF
+    function removeBookmark() {
+        readFromUrl(templateUrl)
+            .then(function (pdfBytes) {
+                // Load the created bookmark document
+                var pdf = new ej.pdf.PdfDocument(pdfBytes);
+                // Get the first page
+                var page = pdf.getPage(0);
+                // Get the bookmarks
+                var bookmarks = pdf.bookmarks;
+                // Remove specified bookmark from the document
+                bookmarks.remove('Paragraph 1.1.2');
+                // Save the document
+                pdf.save('RemoveBookmarks.pdf');
+                // Close the document
+                pdf.destroy();
+            })
+    }
+    // Utility function to draw a text title on the PDF page
+    function drawTitle(page, title, x, y, brush) {
+        // Create a standard Helvetica font
+        var font = new ej.pdf.PdfStandardFont(
+            ej.pdf.PdfFontFamily.helvetica,
+            10
+        );
+        // Define the drawing bounds for the text
+        var bounds = { x: x, y: y, width: 500, height: 20 };
+        // Render the text on the page using graphics
+        page.graphics.drawString(title, font, bounds, brush);
+    }
+    // Fetch helper
+    function readFromUrl(url) {
+        return fetch(url, { cache: 'no-cache' })
+            .then(function (res) {
+                if (!res.ok) {
+                    throw new Error('Failed to fetch ' + url + ': ' + res.status + ' ' + res.statusText);
+                }
+                return res.arrayBuffer();
+            })
+            .then(function (buf) {
+                return new Uint8Array(buf);
+            });
+    }
+</script>

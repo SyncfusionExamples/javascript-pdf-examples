@@ -1,0 +1,51 @@
+<head>
+    <!-- Syncfusion JavaScript PDF Library (CDN) -->
+    <script src="https://cdn.syncfusion.com/ej2/33.2.12/dist/ej2.min.js"></script>
+</head>
+<div class="container py-4">
+    <h1 class="h4 mb-3">Rempove Layers</h1>
+    <button id="removeBtn" class="btn btn-primary">Remove Layers</button>
+</div>
+
+<script>
+    // Remove Layer functionality
+    var removeBtn = new ej.buttons.Button({}, '#removeBtn');
+    removeBtn.element.onclick = removeLayers;
+    function removeLayers() {
+        readFromUrl(templateURL)
+            .then(function (pdfData) {
+                var data = pdfData instanceof Uint8Array ? pdfData : new Uint8Array(pdfData);
+                // Load PDF data
+                var document = new ej.pdf.PdfDocument(data);
+                // Get the layer collection.
+                let layers = document.layers;
+                // Retrieve the first layer from the layers collection
+                let layer = layers.at(0);
+                // Remove the layer from layer collection with instance
+                layers.remove(layer);
+                // Save the document
+                document.save('Output.pdf');
+                // Close the document
+                document.destroy();
+            })
+            .catch(function (err) {
+                console.error(err);
+                alert('Failed to remove layers from resource PDF.');
+            });
+    }
+    // Template PDF URL
+    var templateURL = 'https://cdn.syncfusion.com/content/pdf-resources/layers.pdf';
+    // Fetch helper
+    function readFromUrl(url) {
+        return fetch(url, { cache: 'no-cache' })
+            .then(function (res) {
+                if (!res.ok) {
+                    throw new Error('Failed to fetch ' + url + ': ' + res.status + ' ' + res.statusText);
+                }
+                return res.arrayBuffer();
+            })
+            .then(function (buf) {
+                return new Uint8Array(buf);
+            });
+    }
+</script>

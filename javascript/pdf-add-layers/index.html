@@ -1,0 +1,79 @@
+<head>
+    <!-- Syncfusion JavaScript PDF Library (CDN) -->
+    <script src="https://cdn.syncfusion.com/ej2/33.2.12/dist/ej2.min.js"></script>
+</head>
+<div class="container py-4">
+    <h1 class="h4 mb-3">Add Layers</h1>
+    <button id="addBtn" class="btn btn-primary">Add Layers</button>
+</div>
+
+<script>
+    // Add Layer functionality
+    var addBtn = new ej.buttons.Button({}, '#addBtn');
+    addBtn.element.onclick = function () {
+        // Create a new PDF document
+        var doc = new ej.pdf.PdfDocument();
+        // Configure page settings
+        var settings = new ej.pdf.PdfPageSettings();
+        settings.size = { width: 350, height: 300 };
+        settings.margins = new ej.pdf.PdfMargins(0);
+        // Add a page to the document
+        var page = doc.addPage(settings);
+        // Draw heading text
+        var font = new ej.pdf.PdfStandardFont(ej.pdf.PdfFontFamily.helvetica, 16);
+        var darkBlueBrush = new ej.pdf.PdfBrush({ r: 0, g: 0, b: 139 });
+        page.graphics.drawString(
+            'Layers',
+            font,
+            { x: 150, y: 10, width: 100, height: 100 },
+            darkBlueBrush
+        );
+        // Base rectangle used for drawing arcs
+        var rect = { x: 0, y: 0, width: 50, height: 50 };
+        var pen;
+        /* ---------- Layer 1 ---------- */
+        // Create first layer and graphics
+        var layer1 = doc.layers.add('Layer1');
+        var g1 = layer1.createGraphics(page);
+        // Move drawing origin
+        g1.translateTransform({ x: 100, y: 60 });
+        // Draw multiple arcs with different colors and thickness
+        pen = new ej.pdf.PdfPen({ r: 255, g: 0, b: 0 }, 50);
+        g1.drawArc(rect, 360, 360, pen);
+        pen = new ej.pdf.PdfPen({ r: 0, g: 0, b: 255 }, 30);
+        g1.drawArc(rect, 360, 360, pen);
+        pen = new ej.pdf.PdfPen({ r: 255, g: 255, b: 0 }, 20);
+        g1.drawArc(rect, 360, 360, pen);
+        pen = new ej.pdf.PdfPen({ r: 0, g: 128, b: 0 }, 10);
+        g1.drawArc(rect, 360, 360, pen);
+        /* ---------- Layer 2 ---------- */
+        // Second layer with same arcs at a different position
+        var layer2 = doc.layers.add('Layer2');
+        var g2 = layer2.createGraphics(page);
+        g2.translateTransform({ x: 100, y: 180 });
+        pen = new ej.pdf.PdfPen({ r: 255, g: 0, b: 0 }, 50);
+        g2.drawArc(rect, 360, 360, pen);
+        pen = new ej.pdf.PdfPen({ r: 0, g: 0, b: 255 }, 30);
+        g2.drawArc(rect, 360, 360, pen);
+        pen = new ej.pdf.PdfPen({ r: 255, g: 255, b: 0 }, 20);
+        g2.drawArc(rect, 360, 360, pen);
+        pen = new ej.pdf.PdfPen({ r: 0, g: 128, b: 0 }, 10);
+        g2.drawArc(rect, 360, 360, pen);
+        /* ---------- Layer 3 ---------- */
+        // Third layer with partial arcs
+        var layer3 = doc.layers.add('Layer3');
+        var g3 = layer3.createGraphics(page);
+        g3.translateTransform({ x: 160, y: 120 });
+        pen = new ej.pdf.PdfPen({ r: 255, g: 0, b: 0 }, 50);
+        g3.drawArc(rect, -60, 60, pen);
+        pen = new ej.pdf.PdfPen({ r: 0, g: 0, b: 255 }, 30);
+        g3.drawArc(rect, -60, 60, pen);
+        pen = new ej.pdf.PdfPen({ r: 255, g: 255, b: 0 }, 20);
+        g3.drawArc(rect, -60, 60, pen);
+        pen = new ej.pdf.PdfPen({ r: 0, g: 128, b: 0 }, 10);
+        g3.drawArc(rect, -60, 60, pen);
+        // Save the PDF and release resources
+        doc.save('Layers.pdf');
+        doc.destroy();
+    }
+</script>

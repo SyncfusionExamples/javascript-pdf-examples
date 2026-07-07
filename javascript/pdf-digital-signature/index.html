@@ -1,0 +1,107 @@
+<head>
+    <!-- Syncfusion JavaScript PDF Library (CDN) -->
+    <script src="https://cdn.syncfusion.com/ej2/33.2.12/dist/ej2.min.js"></script>
+</head>
+
+<div class="container py-4">
+    <h1 class="h4 mb-3">Digital signature</h1>
+    <button id="signBtn" class="btn btn-primary">Generate PDF document</button>
+</div>
+
+<script>
+    // Initialize the Sign PDF button
+    var signBtn = new ej.buttons.Button();
+    signBtn.appendTo('#signBtn');
+    // Digitally sign the PDF when the button is clicked
+    signBtn.element.onclick = function () {
+        // Load the PDF document, certificate, and logo image
+        Promise.all([
+            readFromPdfResources(
+                'https://cdn.syncfusion.com/content/pdf-resources/pdf-succinctly.pdf'
+            ),
+            readFromPdfResources(
+                'https://cdn.syncfusion.com/content/pdf-resources/PDF.pfx'
+            ),
+            readFromPdfResources(
+                'https://cdn.syncfusion.com/content/pdf-resources/logo.png'
+            )
+        ])
+            .then(function (results) {
+                // Get the PDF document, certificate, and logo data
+                var pdfBytes = results[0];
+                var pfxBytes = results[1];
+                var logoBytes = results[2];
+                // Load the existing PDF document
+                var pdf = new ej.pdf.PdfDocument(pdfBytes);
+                // Retrieve the first page of the PDF
+                var page = pdf.getPage(0);
+                // Create a signature field on the page
+                var signatureField = new ej.pdf.PdfSignatureField(
+                    page,
+                    'Signature',
+                    {
+                        x: 20,
+                        y: 20,
+                        width: 200,
+                        height: 100
+                    }
+                );
+                // Create a digital signature using the PFX certificate
+                var signature = ej.pdf.PdfSignature.create(
+                    pfxBytes,
+                    'password123',
+                    {
+                        cryptographicStandard: ej.pdf.CryptographicStandard.cms,
+                        digestAlgorithm: ej.pdf.DigestAlgorithm.sha256,
+                        contactInfo: 'support@syncfusion.com',
+                        locationInfo: 'USA',
+                        reason: 'Document Approved'
+                    }
+                );
+                // Assign the digital signature to the signature field
+                signatureField.setSignature(signature);
+                // Get the signature appearance object
+                var appearance = signatureField.getAppearance();
+                // Create an image object from the Syncfusion logo
+                var logo = new ej.pdf.PdfBitmap(logoBytes);
+                // Draw the logo inside the signature appearance
+                appearance.normal.graphics.drawImage(logo, {
+                    x: 10,
+                    y: 10,
+                    width: 80,
+                    height: 35
+                });
+                // Add the signature field to the PDF form
+                pdf.form.add(signatureField);
+                // Save and download the digitally signed PDF document
+                pdf.save('SignedPDF.pdf');
+                // Release PDF resources
+                pdf.destroy();
+            })
+            .catch(function (error) {
+                console.error(error);
+            });
+    };
+
+    // Fetch a resource and return its contents as a Uint8Array
+    function readFromPdfResources(url) {
+        return fetch(url)
+            .then(function (response) {
+                // Validate the response
+                if (!response.ok) {
+                    throw new Error(
+                        'Failed to fetch resource: ' +
+                        response.status +
+                        ' ' +
+                        response.statusText
+                    );
+                }
+                // Convert the response to an ArrayBuffer
+                return response.arrayBuffer();
+            })
+            .then(function (buffer) {
+                // Convert the ArrayBuffer to Uint8Array
+                return new Uint8Array(buffer);
+            });
+    }
+</script>
