@@ -5,134 +5,108 @@
 
 <div class="container py-4">
     <h1 class="h4 mb-3">Add Ordered and Unordered lists into PDF document</h1>
-    <button id="orderbtn" class="btn btn-primary" style="margin: 3%;">Add ordered list</button>
-    <button id="unorderbtn" class="btn btn-primary">Add unordered list</button>
+    <button id="listBtn" class="btn btn-primary" style="margin: 3%;">Generate PDF</button>
 </div>
 
 <script>
     // Create and initialize the Ordered List button
-    var orderButton = new ej.buttons.Button();
-    orderButton.appendTo('#orderbtn');
+    var listBtn = new ej.buttons.Button();
+    listBtn.appendTo('#listBtn');
     // Generate an Ordered List PDF when the button is clicked
-    orderButton.element.onclick = function () {
+    listBtn.element.onclick = function () {
         // Create a new PDF document
         var pdf = new ej.pdf.PdfDocument();
-        // Add a page to the PDF document
+        // Add the first page to the document
         var page = pdf.addPage();
-        // Embed font for the document heading
-        var headerFont = pdf.embedFont(
-            ej.pdf.PdfFontFamily.helvetica,
-            14,
-            ej.pdf.PdfFontStyle.bold
-        );
-        // Embed font for list items
-        var listFont = pdf.embedFont(
-            ej.pdf.PdfFontFamily.timesRoman,
-            10,
-            ej.pdf.PdfFontStyle.regular
-        );
-        // Draw the heading text on the page
+        // Embed different fonts with required families, sizes, and styles
+        var font1 = pdf.embedFont(ej.pdf.PdfFontFamily.helvetica, 14, ej.pdf.PdfFontStyle.bold);
+        var font2 = pdf.embedFont(ej.pdf.PdfFontFamily.helvetica, 12, ej.pdf.PdfFontStyle.regular);
+        var font3 = pdf.embedFont(ej.pdf.PdfFontFamily.timesRoman, 10, ej.pdf.PdfFontStyle.bold);
+        var font4 = pdf.embedFont(ej.pdf.PdfFontFamily.timesRoman, 10, ej.pdf.PdfFontStyle.italic);
+        var font5 = pdf.embedFont(ej.pdf.PdfFontFamily.timesRoman, 10, ej.pdf.PdfFontStyle.regular);
+        // Draw the heading text at the top of the page
         page.graphics.drawString(
-            'Ordered List',
-            headerFont,
-            { x: 200, y: 10, width: 300, height: 30 }
+            'List Features',
+            font1,
+            { x: 225, y: 10, width: 300, height: 100 },
+            new ej.pdf.PdfBrush({ r: 0, g: 0, b: 139 })
         );
-        // Create string formatting and set line spacing
+        // Draw the descriptive paragraph below the heading
+        page.graphics.drawString(
+            'This sample demonstrates various features of bullets and lists. A list can be ordered and unordered. Essential PDF provides support for creating and formatting ordered and unordered lists.',
+            font2,
+            {
+                x: 0,
+                y: 50,
+                width: page.graphics.clientSize.width,
+                height: page.graphics.clientSize.height - 50
+            },
+            new ej.pdf.PdfBrush({ r: 0, g: 0, b: 0 })
+        );
+        // Create a string format to control line spacing
         var format = new ej.pdf.PdfStringFormat();
         format.lineSpacing = 10;
-        // Define the ordered list items
-        var orderedCollection = new ej.pdf.PdfListItemCollection([
-            'Essential Tools',
-            'Essential Grid',
-            'Essential Chart',
-            'Essential Edit',
-            'Essential Diagram',
-            'Essential XlsIO',
-            'Essential PDF',
-            'Essential DocIO'
+        // Create the main unordered list items collection
+        var collection = new ej.pdf.PdfListItemCollection([
+            'List of Essential Studio products',
+            'IO products'
         ]);
-        // Create an ordered list with formatting options
-        var orderedList = new ej.pdf.PdfOrderedList(
-            orderedCollection,
+        // Create the main unordered list with formatting options
+        var list = new ej.pdf.PdfUnorderedList(collection, {
+            format: format,
+            font: font3,
+            style: ej.pdf.PdfUnorderedListStyle.disk,
+            indent: 10,
+            textIndent: 10
+        });
+        // Create an ordered sublist for the first main list item
+        var subList = new ej.pdf.PdfOrderedList(
+            new ej.pdf.PdfListItemCollection(),
             {
-                font: listFont,
-                format: format,
+                brush: new ej.pdf.PdfBrush({ r: 0, g: 0, b: 0 }),
                 indent: 20,
-                textIndent: 10
+                font: font4,
+                format: format
             }
         );
-        // Draw the ordered list on the page
-        orderedList.draw(page, {
-            x: 10,
-            y: 60,
-            width: page.graphics.clientSize.width,
-            height: page.graphics.clientSize.height - 60
+        // Define product names to be added to the ordered sublist
+        var products = [
+            'Tools', 'Grid', 'Chart', 'Edit', 'Diagram',
+            'XlsIO', 'Grouping', 'Calculate', 'PDF',
+            'HTMLUI', 'DocIO'
+        ];
+        // Add each product as an item in the ordered sublist
+        products.forEach(function (s) {
+            subList.items.add(new ej.pdf.PdfListItem('Essential ' + s));
         });
-        // Save the generated PDF file
-        pdf.save('OrderedList.pdf');
-        // Destroy the PDF document instance to release resources
-        pdf.destroy();
-    };
-
-    // Create and initialize the Unordered List button
-    var unorderButton = new ej.buttons.Button();
-    unorderButton.appendTo('#unorderbtn');
-    // Generate an Unordered List PDF when the button is clicked
-    unorderButton.element.onclick = function () {
-        // Create a new PDF document
-        var pdf = new ej.pdf.PdfDocument();
-        // Add a page to the PDF document
-        var page = pdf.addPage();
-        // Embed font for the document heading
-        var headerFont = pdf.embedFont(
-            ej.pdf.PdfFontFamily.helvetica,
-            14,
-            ej.pdf.PdfFontStyle.bold
-        );
-        // Embed font for list items
-        var listFont = pdf.embedFont(
-            ej.pdf.PdfFontFamily.timesRoman,
-            10,
-            ej.pdf.PdfFontStyle.regular
-        );
-        // Draw the heading text on the page
-        page.graphics.drawString(
-            'Unordered List',
-            headerFont,
-            { x: 190, y: 10, width: 300, height: 30 }
-        );
-        // Create string formatting and set line spacing
-        var format = new ej.pdf.PdfStringFormat();
-        format.lineSpacing = 10;
-        // Define the unordered list items
-        var unorderedCollection = new ej.pdf.PdfListItemCollection([
-            'Essential PDF',
-            'Essential DocIO',
-            'Essential XlsIO',
-            'Essential Grid',
-            'Essential Chart'
+        // Assign the ordered sublist to the first main list item
+        list.items.at(0).subList = subList;
+        // Create item collection for the second-level unordered sublist
+        var subSubCollection = new ej.pdf.PdfListItemCollection([
+            'Essential PDF: It is a .NET library with the capability to produce Adobe PDF files. It features a full-fledged object model for the easy creation of PDF files from any .NET language. It does not use any external libraries and is built from scratch in C#. It can be used on the server side (ASP.NET or any other environment) or with Windows Forms applications. Essential PDF supports many features for creating a PDF document. Drawing Text, Images, Shapes, etc can be drawn easily in the PDF document.',
+            'Essential DocIO: It is a .NET library that can read and write Microsoft Word files. It features a full-fledged object model similar to the Microsoft Office COM libraries. It does not use COM interop and is built from scratch in C#. It can be used on systems that do not have Microsoft Word installed. Here are some of the most common questions that arise regarding the usage and functionality of Essential DocIO.',
+            'Essential XlsIO: It is a .NET library that can read and write Microsoft Excel files (BIFF 8 format). It features a full-fledged object model similar to the Microsoft Office COM libraries. It does not use COM interop and is built from scratch in C#. It can be used on systems that do not have Microsoft Excel installed, making it an excellent reporting engine for tabular data.'
         ]);
-        // Create an unordered list with disk bullet style
-        var unorderedList = new ej.pdf.PdfUnorderedList(
-            unorderedCollection,
-            {
-                font: listFont,
-                format: format,
-                style: ej.pdf.PdfUnorderedListStyle.disk,
-                indent: 20,
-                textIndent: 10
-            }
-        );
-        // Draw the unordered list on the page
-        unorderedList.draw(page, {
-            x: 10,
-            y: 60,
-            width: page.graphics.clientSize.width,
-            height: page.graphics.clientSize.height - 60
+        // Create a second-level unordered list with square bullet style
+        var subSubList = new ej.pdf.PdfUnorderedList(subSubCollection, {
+            brush: new ej.pdf.PdfBrush({ r: 0, g: 0, b: 0 }),
+            indent: 20,
+            font: font5,
+            format: format,
+            style: ej.pdf.PdfUnorderedListStyle.square
         });
-        // Save the generated PDF file
-        pdf.save('UnorderedList.pdf');
-        // Destroy the PDF document instance to release resources
+        // Assign the second-level unordered list to the second main list item
+        list.items.at(1).subList = subSubList;
+        // Draw the complete list structure on the page
+        list.draw(page, {
+            x: 0,
+            y: 130,
+            width: page.graphics.clientSize.width,
+            height: page.graphics.clientSize.height - 130
+        });
+        // Save the generated PDF document
+        pdf.save('BulletsAndLists.pdf');
+        // Destroy the document instance to release memory
         pdf.destroy();
     };
 </script>
