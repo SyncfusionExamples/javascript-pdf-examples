@@ -1,14 +1,14 @@
-# How to Fill Form Fields in an Existing PDF Document in TypeScript
+# How to Modify Existing Form Fields in PDF in TypeScript
 
-This project is a complete working application to fill form fields in an existing PDF document using TypeScript.
+This project is a complete working application to modify existing form fields in PDF using TypeScript.
 
 ## Getting Started
 
-To get started you need to clone the `pdf-fill-form` repository and navigate to `pdf-fill-form` location.
+To get started you need to clone the `pdf-modify-form` repository and navigate to `pdf-modify-form` location.
 
 ```
-git clone https://github.com/SyncfusionExamples/javascript-pdf-examples.git pdf-fill-form
-cd pdf-fill-form
+git clone https://github.com/SyncfusionExamples/javascript-pdf-examples.git pdf-modify-form
+cd pdf-modify-form
 ```
 
 ## Installing

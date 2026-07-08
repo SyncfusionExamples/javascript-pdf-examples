@@ -1,10 +1,10 @@
-# How to Fill Form Fields in an Existing PDF Document in JavaScript
+# How to Modify Existing Form Fields in PDF in JavaScript
 
-This project is a complete working application to fill form fields in an existing PDF document using JavaScript.
+This project is a complete working application to modify existing form fields in PDF using JavaScript.
 
 ## Getting Started
 
-To get started you need to clone the `pdf-fill-form` repository.
+To get started you need to clone the `pdf-modify-form` repository.
 
 ```
 git clone https://github.com/SyncfusionExamples/javascript-pdf-examples.git

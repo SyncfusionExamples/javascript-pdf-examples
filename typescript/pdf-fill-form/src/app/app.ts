@@ -1,10 +1,10 @@
 
 import { PdfDocument, PdfForm, PdfTextBoxField, PdfCheckBoxField, PdfRadioButtonListField, PdfListBoxField } from '@syncfusion/ej2-pdf';
 import { Button } from '@syncfusion/ej2-buttons';
-// Create and initialize the Ordered List button
+// Create and initialize the PDF creation button
 var editForm = new Button();
 editForm.appendTo('#editForm');
-// Generate an Ordered List PDF when the button is clicked
+// Generate an PDF form when the button is clicked
 editForm.element.onclick = editFormFields;
 function editFormFields() {
     fetchAsUint8Array(

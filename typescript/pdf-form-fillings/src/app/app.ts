@@ -3,10 +3,10 @@ import { CheckBox, Button } from '@syncfusion/ej2-buttons';
 import { DatePicker } from '@syncfusion/ej2-calendars';
 import { DropDownList } from '@syncfusion/ej2-dropdowns';
 
-// Create and initialize the Ordered List button
+// Create and initialize the PDF creation button
 var editForm = new Button();
 editForm.appendTo('#editForm');
-// Generate an Ordered List PDF when the button is clicked
+// Generate an PDF Form when the button is clicked
 editForm.element.onclick = editFormFields;
 // Gender DropDownList
 var genderData = [
