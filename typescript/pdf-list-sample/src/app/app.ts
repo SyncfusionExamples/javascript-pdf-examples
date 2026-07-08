@@ -2,129 +2,46 @@ import { Button } from '@syncfusion/ej2-buttons';
 import { PdfDocument, PdfBrush, PdfFontFamily, PdfFontStyle, PdfListItem, PdfListItemCollection, PdfOrderedList, PdfStringFormat, PdfUnorderedList, PdfUnorderedListStyle } from '@syncfusion/ej2-pdf';
 
 // Create Ordered List button
-let orderButton: Button = new Button();
-orderButton.appendTo('#orderbtn');
-orderButton.element.onclick = (): void => {
-    // Create a new PDF document
+let listBtn: Button = new Button();
+listBtn.appendTo('#listBtn');
+listBtn.element.onclick = (): void => {
     let pdf = new PdfDocument();
     // Add a new page
     let page = pdf.addPage();
-    // Embed fonts
-    let headerFont = pdf.embedFont(PdfFontFamily.helvetica, 14, PdfFontStyle.bold);
-    let listFont = pdf.embedFont(PdfFontFamily.timesRoman, 10, PdfFontStyle.regular);
-    // Draw title
-    page.graphics.drawString(
-        'Ordered List',
-        headerFont,
-        { x: 225, y: 10, width: 300, height: 100 },
-        new PdfBrush({ r: 0, g: 0, b: 139 })
-    );
-    // Create string format
-    let format = new PdfStringFormat();
-    format.lineSpacing = 10;
-    // Create ordered list
-    const collection = new PdfListItemCollection([
-        'Essential Tools',
-        'Essential Grid',
-        'Essential Chart',
-        'Essential Edit',
-        'Essential Diagram',
-        'Essential XlsIO',
-        'Essential Grouping',
-        'Essential Calculate',
-        'Essential PDF',
-        'Essential HTMLUI',
-        'Essential DocIO'
-    ]);
-    let orderedList = new PdfOrderedList(collection, {
-        font: listFont,
-        format: format,
-        indent: 20,
-        textIndent: 10
-    });
-    // Draw the ordered list
-    orderedList.draw(page, {
-        x: 0,
-        y: 80,
-        width: page.graphics.clientSize.width,
-        height: page.graphics.clientSize.height - 80
-    });
-    // Save the PDF
-    pdf.save('OrderedList.pdf');
-    // Destroy the document instance
-    pdf.destroy();
-};
-
-// Create Unordered List button
-let unorderButton: Button = new Button();
-unorderButton.appendTo('#unorderbtn');
-unorderButton.element.onclick = (): void => {
-    // Create a new PDF document
-    let pdf = new PdfDocument();
-    // Add a new page
-    let page = pdf.addPage();
-    // Embed fonts
+    // Embed fonts used for title, body, and lists
     let font1 = pdf.embedFont(PdfFontFamily.helvetica, 14, PdfFontStyle.bold);
     let font2 = pdf.embedFont(PdfFontFamily.helvetica, 12, PdfFontStyle.regular);
     let font3 = pdf.embedFont(PdfFontFamily.timesRoman, 10, PdfFontStyle.bold);
-    let font4 = pdf.embedFont(PdfFontFamily.timesRoman, 10, PdfFontStyle.regular);
-    // Draw title and description
-    page.graphics.drawString(
-        'Unordered List',
-        font1,
-        { x: 225, y: 10, width: 300, height: 100 },
-        new PdfBrush({ r: 0, g: 0, b: 139 })
-    );
-    page.graphics.drawString(
-        'This sample demonstrates various features of unordered lists.',
-        font2,
-        {
-            x: 0,
-            y: 50,
-            width: page.graphics.clientSize.width,
-            height: page.graphics.clientSize.height - 50
-        },
-        new PdfBrush({ r: 0, g: 0, b: 0 })
-    );
-    // Create string format
+    let font4 = pdf.embedFont(PdfFontFamily.timesRoman, 10, PdfFontStyle.italic);
+    let font5 = pdf.embedFont(PdfFontFamily.timesRoman, 10, PdfFontStyle.regular);
+    // Draw the title and introductory paragraph explaining lists
+    page.graphics.drawString('List Features', font1, { x: 225, y: 10, width: 300, height: 100 }, new PdfBrush({ r: 0, g: 0, b: 139 }));
+    page.graphics.drawString('This sample demonstrates letious features of bullets and lists. A list can be ordered and Unordered. Essential PDF provides support for creating and formatting ordered and unordered lists.', font2, { x: 0, y: 50, width: page.graphics.clientSize.width, height: page.graphics.clientSize.height - 50 }, new PdfBrush({ r: 0, g: 0, b: 0 }));
+    // Create a string format for list items with line spacing
     let format = new PdfStringFormat();
     format.lineSpacing = 10;
-    // Create main unordered list
-    const collection = new PdfListItemCollection([
-        'List of Essential Studio products',
-        'IO products'
+    // Create an unordered list with disk-style bullets
+    const collection = new PdfListItemCollection(['List of Essential Studio products', 'IO products']);
+    let list = new PdfUnorderedList(collection, { format: format, font: font3, style: PdfUnorderedListStyle.disk, indent: 10, textIndent: 10 });
+    // Create ordered sublist for first item
+    let subList = new PdfOrderedList(new PdfListItemCollection(), { brush: new PdfBrush({ r: 0, g: 0, b: 0 }), indent: 20, font: font4, format: format });
+    let products = ['Tools', 'Grid', 'Chart', 'Edit', 'Diagram', 'XlsIO', 'Grouping', 'Calculate', 'PDF', 'HTMLUI', 'DocIO'];
+    products.forEach(function (s) { subList.items.add(new PdfListItem('Essential ' + s)); });
+    // Add the ordered sublist to the first main item
+    list.items.at(0).subList = subList;
+    // Create unordered sublist for second item
+    const subSubListCollection = new PdfListItemCollection([
+        'Essential PDF: It is a .NET library with the capability to produce Adobe PDF files. It features a full-fledged object model for the easy creation of PDF files from any .NET language. It does not use any external libraries and is built from scratch in C#. It can be used on the server side (ASP.NET or any other environment) or with Windows Forms applications. Essential PDF supports many features for creating a PDF document. Drawing Text, Images, Shapes, etc can be drawn easily in the PDF document.',
+        'Essential DocIO: It is a .NET library that can read and write Microsoft Word files. It features a full-fledged object model similar to the Microsoft Office COM libraries. It does not use COM interop and is built from scratch in C#. It can be used on systems that do not have Microsoft Word installed. Here are some of the most common questions that arise regarding the usage and functionality of Essential DocIO.',
+        'Essential XlsIO: It is a .NET library that can read and write Microsoft Excel files (BIFF 8 format). It features a full-fledged object model similar to the Microsoft Office COM libraries. It does not use COM interop and is built from scratch in C#. It can be used on systems that do not have Microsoft Excel installed, making it an excellent reporting engine for tabular data. ',
     ]);
-    let unorderedList = new PdfUnorderedList(collection, {
-        format: format,
-        font: font3,
-        style: PdfUnorderedListStyle.disk,
-        indent: 10,
-        textIndent: 10
-    });
-    // Create unordered sublist
-    const subListCollection = new PdfListItemCollection([
-        'Essential PDF: It is a .NET library with the capability to produce Adobe PDF files.',
-        'Essential DocIO: It is a .NET library that can read and write Microsoft Word files.',
-        'Essential XlsIO: It is a .NET library that can read and write Microsoft Excel files.'
-    ]);
-    let subList = new PdfUnorderedList(subListCollection, {
-        brush: new PdfBrush({ r: 0, g: 0, b: 0 }),
-        indent: 20,
-        font: font4,
-        format: format,
-        style: PdfUnorderedListStyle.square
-    });
+    let SubsubList = new PdfUnorderedList(subSubListCollection, { brush: new PdfBrush({ r: 0, g: 0, b: 0 }), indent: 20, font: font5, format: format, style: PdfUnorderedListStyle.square });
     // Add the unordered sublist to the second main item
-    unorderedList.items.at(1).subList = subList;
-    // Draw the unordered list
-    unorderedList.draw(page, {
-        x: 0,
-        y: 130,
-        width: page.graphics.clientSize.width,
-        height: page.graphics.clientSize.height - 130
-    });
-    // Save the PDF
-    pdf.save('UnorderedList.pdf');
-    // Destroy the document instance
+    list.items.at(1).subList = SubsubList;
+    // Draw the list on the page
+    list.draw(page, { x: 0, y: 130, width: page.graphics.clientSize.width, height: page.graphics.clientSize.height - 130 });
+    // Save the document PDF
+    pdf.save('BulletsAndLists.pdf');
+    // Destory the document instance.
     pdf.destroy();
 };
