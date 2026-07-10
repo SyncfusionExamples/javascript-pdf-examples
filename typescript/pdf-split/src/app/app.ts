@@ -1,51 +1,43 @@
 
 import { Button } from '@syncfusion/ej2-buttons';
-import { NumericTextBox } from '@syncfusion/ej2-inputs';
-import { PdfDocument } from '@syncfusion/ej2-pdf';
+import { PdfDocument, PdfDocumentSplitEventArgs } from '@syncfusion/ej2-pdf';
+import { Save } from '@syncfusion/ej2/file-utils';
 
 
-const DEFAULT_PDF_URL =
-    'https://cdn.syncfusion.com/content/pdf-resources/pdf-succinctly.pdf';
-
-// Initialize input box
-const numericBox = new NumericTextBox(
-    {
-        min: 1,
-        value: 2,
-        format: 'n0',
-        width: '120px',
-        showSpinButton: true
-    }
-);
-numericBox.appendTo('#pagesPerFileInput');
+const DEFAULT_PDF_URL = 'https://cdn.syncfusion.com/content/pdf-resources/pdf-succinctly.pdf';
 // Initialize button
 const splitBtnSf = new Button();
 splitBtnSf.appendTo('#splitBtn');
-splitBtnSf.element.onclick = async function (): Promise<void> {
-    try {
-        const response = await fetch(DEFAULT_PDF_URL);
-        const buffer = await response.arrayBuffer();
-        const pdf = new PdfDocument(new Uint8Array(buffer));
-        // Download each generated PDF
-        (pdf as any).splitEvent = (
-            _sender: unknown,
-            args: { index: number; pdfData: Uint8Array }
-        ) => {
-            const splitDocument = new PdfDocument(args.pdfData);
+splitBtnSf.element.onclick = splitPDF;
 
-            splitDocument.save(`SplitDocument_${args.index + 1}.pdf`);
-            splitDocument.destroy();
-        };
-        const inputElement = document.getElementById(
-            'pagesPerFileInput'
-        ) as HTMLElement;
-        const instance = (inputElement as any).ej2_instances[0];
-        const pagesPerFile = instance.value;
-        // Split PDF by page count
-        (pdf as any).splitByFixedNumber(pagesPerFile);
-        pdf.destroy();
-    } catch (error) {
-        console.error(error);
-        alert('Failed to split PDF.');
-    }
+function splitPDF() {
+    readFromUrl(DEFAULT_PDF_URL)
+        .then(function (pdfBytes) {
+            const pdf = new PdfDocument(pdfBytes);
+            // Download each generated PDF
+            pdf.splitEvent = (sender: PdfDocument, args: PdfDocumentSplitEventArgs) => {
+                Save.save('SplitDocument_' + (args.index + 1) + '.pdf', new Blob([args.pdfData], { type: 'application/pdf' }));
+            };
+            // Split PDF document into individual pages
+            pdf.split();
+            pdf.destroy();
+        });
+}
+
+// Fetch PDF data from a URL
+function readFromUrl(url: string): Promise<Uint8Array> {
+    return fetch(url, { cache: 'no-cache' })
+        .then(function (res) {
+            // Check whether the request was successful
+            if (!res.ok) {
+                throw new Error(
+                    'Failed to fetch ' + url + ': ' + res.status + ' ' + res.statusText
+                );
+            }
+            return res.arrayBuffer();
+        })
+        .then(function (buf) {
+            // Convert the response to Uint8Array
+            return new Uint8Array(buf);
+        });
 }

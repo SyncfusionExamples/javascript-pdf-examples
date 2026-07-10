@@ -4,44 +4,54 @@
 </head>
 <div class="container py-4">
     <h1 class="h4 mb-3">Split PDF</h1>
-    <label>Pages per file:</label>
-    <input type="number" id="pagesPerFileInput" value="2" min="1" />
     <button id="splitBtn" class="btn btn-primary">Generate PDF document</button>
 </div>
 
 <script>
-    var DEFAULT_PDF_URL = 'https://cdn.syncfusion.com/content/pdf-resources/pdf-succinctly.pdf';
-    var splitBtn = new ej.buttons.Button();
+    const DEFAULT_PDF_URL = 'https://cdn.syncfusion.com/content/pdf-resources/pdf-succinctly.pdf';
+    // Initialize button
+    const splitBtn = new ej.buttons.Button();
     splitBtn.appendTo('#splitBtn');
-    // Click handler to merge PDFs
-    splitBtn.element.onclick = function () {
-        fetch(DEFAULT_PDF_URL)
-            .then(function (response) {
-                return response.arrayBuffer();
-            })
-            .then(function (buffer) {
-                var pdf = new ej.pdf.PdfDocument(
-                    new Uint8Array(buffer)
-                );
-                // Downloads each split document
-                pdf.splitEvent = function (_sender, args) {
-                    var splitDoc = new ej.pdf.PdfDocument(args.pdfData);
-                    splitDoc.save(
-                        'SplitDocument_' + (args.index + 1) + '.pdf'
-                    );
-                    splitDoc.destroy();
-                };
-                var pagesPerFile =
-                    parseInt(
-                        document.getElementById('pagesPerFileInput').value,
-                        10
-                    ) || 1;
-                pdf.splitByFixedNumber(pagesPerFile);
-                pdf.destroy();
-            })
-            .catch(function (error) {
-                console.error(error);
-                alert('Failed to split PDF.');
-            });
-    };
+    // Split PDF on button click
+    splitBtn.element.addEventListener('click', async () => {
+        try {
+            // Load the PDF document from the specified URL.
+            const pdfData = await readFromUrl(DEFAULT_PDF_URL);
+            const pdf = new ej.pdf.PdfDocument(pdfData);
+            // Event triggered each time a split document is generated.
+            pdf.splitEvent = (_sender, args) => {
+                // Access the PDF document data and load it into PDF document instance.
+                const splitDocument = new ej.pdf.PdfDocument(args.pdfData);
+                // Save the split PDF document.
+                // args.index represents the zero-based index of the split document.
+                splitDocument.save(`SplitDocument_${args.index + 1}.pdf`);
+                // Release the resources used by the split document.
+                splitDocument.destroy();
+            };
+            // Split the PDF into individual documents.
+            pdf.split();
+            // Release the resources used by the original PDF document.
+            pdf.destroy();
+        } catch (error) {
+            alert('Failed to split PDF.');
+        }
+    });
+
+    /**
+     * Fetch PDF from URL and return as Uint8Array
+     * @param {string} url
+     * @returns {Promise<Uint8Array>}
+     */
+    async function readFromUrl(url) {
+        const response = await fetch(url, {
+            cache: 'no-cache'
+        });
+        if (!response.ok) {
+            throw new Error(
+                `Failed to fetch ${url}: ${response.status} ${response.statusText}`
+            );
+        }
+        const buffer = await response.arrayBuffer();
+        return new Uint8Array(buffer);
+    }
 </script>

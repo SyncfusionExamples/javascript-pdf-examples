@@ -1,0 +1,47 @@
+<head>
+    <!-- Syncfusion JavaScript PDF Library (CDN) -->
+    <script src="https://cdn.syncfusion.com/ej2/33.2.12/dist/ej2.min.js"></script>
+</head>
+<div class="container py-4">
+    <h1 class="h4 mb-3">Get Bookmark Page Index from PDF</h1>
+    <button id="indexBtn" class="btn btn-primary">Get Bookmark Index</button>
+</div>
+
+<script>
+    // Add Bookmark functionality
+    var indexBtn = new ej.buttons.Button({}, '#indexBtn');
+    indexBtn.element.onclick = getBookmarkIndex;
+    //Method to add bookmark on PDF
+    function getBookmarkIndex() {
+        const templateUrl = 'https://cdn.syncfusion.com/content/pdf-resources/bookmarks.pdf';
+        readFromUrl(templateUrl)
+            .then(function (pdfBytes) {
+                // Create a new PDF document instance
+                let document = new ej.pdf.PdfDocument(pdfBytes);
+                // Get bookmarks
+                var bookmarks = document.bookmarks;
+                // Get the first bookmark (or any specific one)
+                var bookmark = bookmarks.at(1);
+                // Get the page index of the bookmark's destination
+                var pageIndex = bookmark.destination.pageIndex;
+                // Print the Bookmark index
+                console.log('Bookmark Index: ' + pageIndex);
+                // Destroy the document instance to release memory
+                document.destroy();
+            })
+    }
+
+    // Fetch helper
+    function readFromUrl(url) {
+        return fetch(url, { cache: 'no-cache' })
+            .then(function (res) {
+                if (!res.ok) {
+                    throw new Error('Failed to fetch ' + url + ': ' + res.status + ' ' + res.statusText);
+                }
+                return res.arrayBuffer();
+            })
+            .then(function (buf) {
+                return new Uint8Array(buf);
+            });
+    }
+</script>

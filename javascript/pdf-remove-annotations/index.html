@@ -1,0 +1,47 @@
+<head>
+    <!-- Syncfusion JavaScript PDF Library (CDN) -->
+    <script src="https://cdn.syncfusion.com/ej2/33.2.12/dist/ej2.min.js"></script>
+</head>
+<div class="container py-4">
+    <h1 class="h4 mb-3">Remove Annotations from PDF</h1>
+    <button id="removeBtn" class="btn btn-primary">Remove Annotations</button>
+</div>
+
+<script>
+    // Remove Annotation functionality
+    var removeBtn = new ej.buttons.Button({}, '#removeBtn');
+    removeBtn.element.onclick = removeAnnotations;
+    //Method to remove annotation on PDF
+    function removeAnnotations() {
+        const templateUrl = 'https://cdn.syncfusion.com/content/pdf-resources/Annotation.pdf';
+        readFromUrl(templateUrl)
+            .then(function (pdfBytes) {
+                // Create a new PDF document instance
+                let document = new ej.pdf.PdfDocument(pdfBytes);
+                // Access the first page
+                var page = document.getPage(0);
+                // Access first annotation from the PDF page
+                var annotation = page.annotations.at(0);
+                // Remove an annotation from the collection
+                page.annotations.remove(annotation);
+                // Save the Updated PDF
+                document.save('RemoveAnnotations.pdf');
+                // Destroy the document instance to release memory
+                document.destroy();
+            })
+    }
+
+    // Fetch helper
+    function readFromUrl(url) {
+        return fetch(url, { cache: 'no-cache' })
+            .then(function (res) {
+                if (!res.ok) {
+                    throw new Error('Failed to fetch ' + url + ': ' + res.status + ' ' + res.statusText);
+                }
+                return res.arrayBuffer();
+            })
+            .then(function (buf) {
+                return new Uint8Array(buf);
+            });
+    }
+</script>

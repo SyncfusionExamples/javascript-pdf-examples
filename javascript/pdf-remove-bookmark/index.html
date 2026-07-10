@@ -1,0 +1,45 @@
+<head>
+    <!-- Syncfusion JavaScript PDF Library (CDN) -->
+    <script src="https://cdn.syncfusion.com/ej2/33.2.12/dist/ej2.min.js"></script>
+</head>
+<div class="container py-4">
+    <h1 class="h4 mb-3">Remove Bookmark Using Index from PDF</h1>
+    <button id="indexBtn" class="btn btn-primary">Remove Bookmark</button>
+</div>
+
+<script>
+    // Remove Bookmark (By Index) functionality
+    var indexBtn = new ej.buttons.Button({}, '#indexBtn');
+    indexBtn.element.onclick = removeBookmarkIndex;
+    //Method to remove bookmark on PDF
+    function removeBookmarkIndex() {
+        const templateUrl = 'https://cdn.syncfusion.com/content/pdf-resources/bookmarks.pdf';
+        readFromUrl(templateUrl)
+            .then(function (pdfBytes) {
+                // Create a new PDF document instance
+                let document = new ej.pdf.PdfDocument(pdfBytes);
+                // Get bookmarks
+                var bookmarks = document.bookmarks;
+                // Remove the bookmark from the document at the index 1
+                var bookmark = bookmarks.remove(1);
+                // Save the Updated PDF
+                document.save('Bookmark.pdf');
+                // Destroy the document instance to release memory
+                document.destroy();
+            })
+    }
+
+    // Fetch helper
+    function readFromUrl(url) {
+        return fetch(url, { cache: 'no-cache' })
+            .then(function (res) {
+                if (!res.ok) {
+                    throw new Error('Failed to fetch ' + url + ': ' + res.status + ' ' + res.statusText);
+                }
+                return res.arrayBuffer();
+            })
+            .then(function (buf) {
+                return new Uint8Array(buf);
+            });
+    }
+</script>

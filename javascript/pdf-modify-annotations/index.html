@@ -1,0 +1,51 @@
+<head>
+    <!-- Syncfusion JavaScript PDF Library (CDN) -->
+    <script src="https://cdn.syncfusion.com/ej2/33.2.12/dist/ej2.min.js"></script>
+</head>
+<div class="container py-4">
+    <h1 class="h4 mb-3">Modify Annotations in PDF</h1>
+    <button id="modifyBtn" class="btn btn-primary">Modify Annotations</button>
+</div>
+
+<script>
+    // Modify Annotation functionality
+    var modifyBtn = new ej.buttons.Button({}, '#modifyBtn');
+    modifyBtn.element.onclick = modifyAnnotations;
+    //Method to modify annotation on PDF
+    function modifyAnnotations() {
+        const templateUrl = 'https://cdn.syncfusion.com/content/pdf-resources/Annotation.pdf';
+        readFromUrl(templateUrl)
+            .then(function (pdfBytes) {
+                // Create a new PDF document instance
+                let document = new ej.pdf.PdfDocument(pdfBytes);
+                // Access the first page
+                var page = document.getPage(0);
+                // Get the first annotation of the page
+                var annotation = page.annotations.at(0);
+                // Modify its properties
+                if (annotation) {
+                    annotation.text = 'Pop Annotation';
+                    annotation.color = { r: 0, g: 128, b: 255 };
+                    annotation.opacity = 0.5;
+                }
+                // Save the Updated PDF
+                document.save('ModifyAnnotations.pdf');
+                // Destroy the document instance to release memory
+                document.destroy();
+            })
+    }
+
+    // Fetch helper
+    function readFromUrl(url) {
+        return fetch(url, { cache: 'no-cache' })
+            .then(function (res) {
+                if (!res.ok) {
+                    throw new Error('Failed to fetch ' + url + ': ' + res.status + ' ' + res.statusText);
+                }
+                return res.arrayBuffer();
+            })
+            .then(function (buf) {
+                return new Uint8Array(buf);
+            });
+    }
+</script>
