@@ -9,27 +9,30 @@
 
 <script>
     const DEFAULT_PDF_URL = 'https://cdn.syncfusion.com/content/pdf-resources/pdf-succinctly.pdf';
-
     // Initialize button
     const splitBtn = new ej.buttons.Button();
     splitBtn.appendTo('#splitBtn');
-
     // Split PDF on button click
     splitBtn.element.addEventListener('click', async () => {
         try {
+            // Load the PDF document from the specified URL.
             const pdfData = await readFromUrl(DEFAULT_PDF_URL);
             const pdf = new ej.pdf.PdfDocument(pdfData);
+            // Event triggered each time a split document is generated.
             pdf.splitEvent = (_sender, args) => {
+                // Access the PDF document data and load it into PDF document instance.
                 const splitDocument = new ej.pdf.PdfDocument(args.pdfData);
-                splitDocument.save(
-                    `SplitDocument_${args.index + 1}.pdf`
-                );
+                // Save the split PDF document.
+                // args.index represents the zero-based index of the split document.
+                splitDocument.save(`SplitDocument_${args.index + 1}.pdf`);
+                // Release the resources used by the split document.
                 splitDocument.destroy();
             };
+            // Split the PDF into individual documents.
             pdf.split();
+            // Release the resources used by the original PDF document.
             pdf.destroy();
         } catch (error) {
-            console.error('Failed to split PDF:', error);
             alert('Failed to split PDF.');
         }
     });

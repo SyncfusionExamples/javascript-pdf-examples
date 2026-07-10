@@ -1,161 +1,148 @@
-import { PdfDocument, PdfForm, PdfTextBoxField, PdfCheckBoxField, PdfListFieldItem, PdfComboBoxField, PdfRadioButtonListField } from '@syncfusion/ej2-pdf';
-import { CheckBox, Button } from '@syncfusion/ej2-buttons';
-import { DatePicker } from '@syncfusion/ej2-calendars';
-import { DropDownList } from '@syncfusion/ej2-dropdowns';
+import { PdfDocument, PdfTextBoxField, PdfStandardFont, PdfFontFamily, PdfFontStyle, PdfBrush, PdfRadioButtonListField, PdfInteractiveBorder, PdfBorderStyle, PdfComboBoxField, PdfJavaScriptAction, PdfCheckBoxField, PdfButtonField, PdfHighlightMode } from '@syncfusion/ej2-pdf';
+import { Button } from '@syncfusion/ej2-buttons';
 
-// Create and initialize the PDF creation button
-var editForm = new Button();
-editForm.appendTo('#editForm');
-// Generate an PDF Form when the button is clicked
-editForm.element.onclick = editFormFields;
-// Gender DropDownList
-var genderData = [
-    { text: 'Male', value: 'Male' },
-    { text: 'Female', value: 'Female' },
-    { text: 'Other', value: 'Other' }
-];
-var genderDropDown = new DropDownList({
-    dataSource: genderData,
-    fields: { text: 'text', value: 'value' },
-    value: 'Male',
-    popupHeight: '200px'
-});
-genderDropDown.appendTo('#gender');
+// Create button
+const formBtn = new Button();
+formBtn.appendTo('#formBtn');
+// Generate PDF form on click
+formBtn.element.onclick = createFormFields;
 
-// State DropDownList
-var stateData = [
-    'Alabama', 'Alaska', 'California', 'Delaware', 'Florida', 'Georgia',
-    'Hawaii', 'Indiana', 'Kentucky', 'Louisiana', 'Maine', 'Maryland', 'New Jersey',
-    'New Mexico', 'New York', 'Texas', 'Washington', 'Wyoming'
-];
-var stateDropDown = new DropDownList({
-    dataSource: stateData,
-    value: 'Alabama',
-    popupHeight: '200px'
-});
-stateDropDown.appendTo('#state');
-
-// Date of Birth DatePicker
-var dobPicker = new DatePicker({
-    value: new Date(2012, 11, 5),
-    format: 'MM/dd/yyyy'
-});
-dobPicker.appendTo('#dob');
-
-// Newsletter CheckBox
-var newsletterCheckBox = new CheckBox({
-    label: 'Would you like to receive our Newsletter?',
-    cssClass: 'e-custom'
-});
-newsletterCheckBox.appendTo('#newsletter');
-
-function editFormFields() {
-    fetchAsUint8Array(
-        'https://cdn.syncfusion.com/content/pdf-resources/form-filling-document.pdf'
-    )
-        .then(function (pdfBytes) {
-            // Read current form values from the page
-            const values = getFormValues();
-            // Create a PdfDocument from the fetched bytes
-            const pdf = new PdfDocument(pdfBytes);
-            // Get the PdfForm
-            const form = pdf.form;
-            // Map and set each field if present, then set appearance
-            const nameField = findByName(form, 'name') as PdfTextBoxField | undefined;
-            if (nameField) {
-                nameField.text = values.name;
-                nameField.setAppearance(true);
-            }
-            const gender = findByName(form, 'gender') as PdfRadioButtonListField | undefined;
-            if (gender) {
-                switch (values.gender) {
-                    case 'Male': gender.selectedIndex = 0; break;
-                    case 'Other': gender.selectedIndex = 1; break;
-                    case 'Female': gender.selectedIndex = 2; break;
-                }
-                gender.setAppearance(true);
-            }
-            const dobField = findByName(form, 'dob') as PdfTextBoxField | undefined;
-            if (dobField) {
-                dobField.text = values.dob;
-                dobField.setAppearance(true);
-            }
-            const emailField = findByName(form, 'email') as PdfTextBoxField | undefined;
-            if (emailField) {
-                emailField.text = values.email;
-                emailField.setAppearance(true);
-            }
-            const stateField = findByName(form, 'state') as PdfComboBoxField | undefined;
-            if (stateField) {
-                for (let i = 0; i < stateField.itemsCount; i++) {
-                    const item = stateField._options[i] as any;
-                    if (item === values.state) {
-                        stateField.selectedIndex = i;
-                        break;
-                    }
-                }
-                stateField.setAppearance(true);
-            }
-            const newsField = findByName(form, 'newsletter');
-            if (newsField && 'checked' in newsField) {
-                (newsField as PdfCheckBoxField).checked = values.newsletter;
-                (newsField as PdfCheckBoxField).setAppearance(true);
-            }
-            // Save and download the document
-            pdf.save('FormFillings.pdf');
-            // Destroy the document
-            pdf.destroy();
-        })
-        .catch(function (err) {
-            console.error(err);
-            alert('Failed to create fillable form PDF');
-        })
-}
-
-// Read values from EJ2 form controls
-function getFormValues() {
-    function getInstance(id: string): any {
-        const el = document.getElementById(id) as any;
-        return el?.ej2_instances?.[0];
-    }
-    const name = (document.getElementById('name') as HTMLInputElement)?.value || '';
-    const email = (document.getElementById('email') as HTMLInputElement)?.value || '';
-    const gender = getInstance('gender')?.value || 'Male';
-    const state = getInstance('state')?.value || '';
-    const newsletter = !!getInstance('newsletter')?.checked;
-    let dob = '';
-    const dobInst = getInstance('dob');
-    if (dobInst?.value) {
-        const d = dobInst.value;
-        const mm = pad(d.getMonth() + 1);
-        const dd = pad(d.getDate());
-        const yyyy = d.getFullYear();
-        dob = `${mm}/${dd}/${yyyy}`;
-    }
-    return {
-        name,
-        gender,
-        dob,
-        email,
-        state,
-        newsletter
-    };
-}
-function pad(val: number): string {
-    return val < 10 ? '0' + val : String(val);
-}
-// Find PDF form field by name
-function findByName(form: PdfForm, name: string) {
-    for (let i = 0; i < form.count; i++) {
-        const field = form.fieldAt(i);
-        if (field && field.name === name) return field;
-    }
-    return undefined;
-}
-//   Fetch URL and return Uint8Array
-async function fetchAsUint8Array(url: string): Promise<Uint8Array> {
-    const res = await fetch(url, { cache: 'no-cache' });
-    if (!res.ok) throw new Error(`Failed to fetch ${url}: ${res.status} ${res.statusText}`);
-    const buf = await res.arrayBuffer();
-    return new Uint8Array(buf);
+function createFormFields(): void {
+    // Create PDF document and page
+    const document = new PdfDocument();
+    const page = document.addPage();
+    const graphics = page.graphics;
+    // Fonts
+    const font: PdfStandardFont = document.embedFont(
+        PdfFontFamily.helvetica,
+        20,
+        PdfFontStyle.regular
+    );
+    const radioFont = document.embedFont(
+        PdfFontFamily.helvetica,
+        13,
+        PdfFontStyle.regular
+    );
+    const comboFont = document.embedFont(
+        PdfFontFamily.helvetica,
+        10,
+        PdfFontStyle.regular
+    );
+    // Common styles
+    const black = { r: 0, g: 0, b: 0 };
+    const white = { r: 255, g: 255, b: 255 };
+    const brush = new PdfBrush(black);
+    const solidBorder = new PdfInteractiveBorder({
+        width: 1,
+        style: PdfBorderStyle.solid
+    });
+    // Name field
+    graphics.drawString('Name:', font, { x: 10, y: 58, width: 300, height: 400 }, brush);
+    const nameField = new PdfTextBoxField(page, 'Name', {
+        x: 100,
+        y: 60,
+        width: 200,
+        height: 22
+    });
+    document.form.add(nameField);
+    // Gender field
+    graphics.drawString('Gender:', font, { x: 10, y: 98, width: 300, height: 400 }, brush);
+    graphics.drawString('Male', radioFont, { x: 100, y: 105, width: 300, height: 400 }, brush);
+    graphics.drawString('Female', radioFont, { x: 150, y: 105, width: 300, height: 400 }, brush);
+    graphics.drawString('Other', radioFont, { x: 220, y: 105, width: 300, height: 400 }, brush);
+    const genderField = new PdfRadioButtonListField(page, 'Gender', {
+        items: [
+            { name: 'Male', bounds: { x: 130, y: 108, width: 14, height: 10 } },
+            { name: 'Female', bounds: { x: 195, y: 108, width: 14, height: 10 } },
+            { name: 'Other', bounds: { x: 255, y: 108, width: 14, height: 10 } }
+        ],
+        selectedIndex: 1
+    });
+    document.form.add(genderField);
+    // Mail field
+    graphics.drawString('Mail:', font, { x: 10, y: 138, width: 300, height: 400 }, brush);
+    const mailField = new PdfTextBoxField(page, 'Name', {
+        x: 100,
+        y: 140,
+        width: 200,
+        height: 22
+    });
+    document.form.add(mailField);
+    // State dropdown
+    graphics.drawString('State:', font, { x: 10, y: 178, width: 300, height: 400 }, brush);
+    const stateField = new PdfComboBoxField(
+        page,
+        'State',
+        { x: 100, y: 180, width: 200, height: 22 },
+        {
+            items: [
+                { text: 'California', value: 'CA' },
+                { text: 'Washington D.C', value: 'DC' },
+                { text: 'London', value: 'LN' }
+            ],
+            color: black,
+            backColor: white,
+            borderColor: black,
+            border: solidBorder,
+            selectedIndex: 0,
+            font: comboFont
+        }
+    );
+    document.form.add(stateField);
+    // Date of birth field
+    graphics.drawString('DOB:', font, { x: 10, y: 218, width: 300, height: 400 }, brush);
+    const dateField = new PdfTextBoxField(page, 'DateField', {
+        x: 100,
+        y: 220,
+        width: 200,
+        height: 22
+    });
+    // Default date value
+    dateField.text = '18/08/2003';
+    // Date format validation
+    const format = 'yyyy-mm-dd';
+    dateField.actions.format =
+        new PdfJavaScriptAction(`AFDate_FormatEx("${format}");`);
+    dateField.actions.keyPressed =
+        new PdfJavaScriptAction(`AFDate_KeystrokeEx("${format}"):`);
+    dateField.actions.validate =
+        new PdfJavaScriptAction(`AFDate_Validate("${format}");`);
+    document.form.add(dateField);
+    // Terms and conditions checkbox
+    graphics.drawString('T&C', font, { x: 10, y: 258, width: 300, height: 400 }, brush);
+    const checkboxField = new PdfCheckBoxField(
+        'AcceptTerms',
+        { x: 100, y: 262, width: 14, height: 14 },
+        page,
+        {
+            toolTip: 'Accept the terms and conditions',
+            backColor: white,
+            borderColor: black,
+            border: solidBorder,
+            checked: true
+        }
+    );
+    document.form.add(checkboxField);
+    // Submit button
+    const buttonField = new PdfButtonField(
+        page,
+        'Submit',
+        { x: 10, y: 300, width: 120, height: 28 },
+        {
+            toolTip: 'Submit form',
+            color: white,
+            backColor: { r: 0, g: 122, b: 204 },
+            borderColor: black,
+            border: solidBorder,
+            text: 'Submit',
+            highlightMode: PdfHighlightMode.push
+        }
+    );
+    // Generate button appearance
+    buttonField.setAppearance(true);
+    document.form.add(buttonField);
+    // Save PDF
+    document.save('FormCreation.pdf');
+    // Release resources
+    document.destroy();
 }

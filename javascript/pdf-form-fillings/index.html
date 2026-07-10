@@ -7,37 +7,6 @@
 
 <div class="container py-4">
     <h1 class="h4 mb-3">PDF Forms</h1>
-</div>
-
-<div class="control-section" style="margin-top: 3%;">
-    <div class="form-group">
-        <label for="name">Name</label>
-        <input id="name" class="e-input" type="text" placeholder="John Milton" value="John Milton" />
-    </div>
-    <div class="form-group">
-        <label for="gender">Gender</label>
-        <input id="gender" type="text" />
-    </div>
-    <div class="form-group">
-        <label for="dob">Date of Birth</label>
-        <input id="dob" type="text" />
-    </div>
-    <div class="form-group">
-        <label for="email">Email ID</label>
-        <input id="email" class="e-input" type="text" placeholder="john.milton@example.com"
-            value="john.milton@example.com" />
-    </div>
-    <div class="form-group">
-        <label for="state">Coming from</label>
-        <input id="state" type="text" />
-    </div>
-    <!-- Newsletter -->
-    <div class="form-group">
-        <div class="inline">
-            <input id="newsletter" type="checkbox" />
-            <label for="newsletter" style="font-weight: 600;"></label>
-        </div>
-    </div>
     <button id="formBtn" class="btn btn-primary" style="margin: 1%;">Generate PDF</button>
 </div>
 
@@ -47,224 +16,144 @@
     formBtn.appendTo('#formBtn');
     // Generate an PDF Form when the button is clicked
     formBtn.element.onclick = createFormPDF;
-    // Gender DropDownList
-    var genderData = [
-        { text: 'Male', value: 'Male' },
-        { text: 'Female', value: 'Female' },
-        { text: 'Other', value: 'Other' }
-    ];
-    var genderDropDown = new ej.dropdowns.DropDownList({
-        dataSource: genderData,
-        fields: { text: 'text', value: 'value' },
-        value: 'Male',
-        popupHeight: '200px'
-    });
-    genderDropDown.appendTo('#gender');
-
-    // State DropDownList
-    var stateData = [
-        'Alabama', 'Alaska', 'California', 'Delaware', 'Florida', 'Georgia',
-        'Hawaii', 'Indiana', 'Kentucky', 'Louisiana', 'Maine', 'Maryland', 'New Jersey',
-        'New Mexico', 'New York', 'Texas', 'Washington', 'Wyoming'
-    ];
-    var stateDropDown = new ej.dropdowns.DropDownList({
-        dataSource: stateData,
-        value: 'Alabama',
-        popupHeight: '200px'
-    });
-    stateDropDown.appendTo('#state');
-
-    // Date of Birth DatePicker
-    var dobPicker = new ej.calendars.DatePicker({
-        value: new Date(2012, 11, 5),
-        format: 'MM/dd/yyyy'
-    });
-    dobPicker.appendTo('#dob');
-
-    // Newsletter CheckBox
-    var newsletterCheckBox = new ej.buttons.CheckBox({
-        label: 'Would you like to receive our Newsletter?',
-        cssClass: 'e-custom'
-    });
-    newsletterCheckBox.appendTo('#newsletter');
 
     function createFormPDF() {
-        fetchAsUint8Array(
-            'https://cdn.syncfusion.com/content/pdf-resources/form-filling-document.pdf'
-        )
-            .then(function (pdfBytes) {
-                // Read values from HTML form inputs
-                var values = getFormValues();
-                // Create PDF document instance
-                var pdf = new ej.pdf.PdfDocument(pdfBytes);
-                var form = pdf.form;
-                // Fill Name field
-                var nameField = findByName(form, 'name');
-                if (nameField) {
-                    nameField.text = values.name;
-                    nameField.setAppearance(true);
-                }
-                // Fill Gender (Radio button list)
-                var gender = findByName(form, 'gender');
-                if (gender) {
-                    if (values.gender === 'Male') gender.selectedIndex = 0;
-                    else if (values.gender === 'Other') gender.selectedIndex = 1;
-                    else if (values.gender === 'Female') gender.selectedIndex = 2;
-                    gender.setAppearance(true);
-                }
-                // Fill Date of Birth
-                var dobField = findByName(form, 'dob');
-                if (dobField) {
-                    dobField.text = values.dob;
-                    dobField.setAppearance(true);
-                }
-                // Fill Email
-                var emailField = findByName(form, 'email');
-                if (emailField) {
-                    emailField.text = values.email;
-                    emailField.setAppearance(true);
-                }
-                // Fill State (ComboBox)
-                var stateField = findByName(form, 'state');
-                if (stateField) {
-                    for (var i = 0; i < stateField.itemsCount; i++) {
-                        var item = stateField._options[i];
-                        if (item === values.state) {
-                            stateField.selectedIndex = i;
-                            break;
-                        }
-                    }
-                    stateField.setAppearance(true);
-                }
-                // Fill Newsletter checkbox
-                var newsField = findByName(form, 'newsletter');
-                if (newsField) {
-                    newsField.checked = values.newsletter;
-                    newsField.setAppearance(true);
-                }
-                // Save filled PDF
-                pdf.save('FormFillings.pdf');
-                // Cleanup PDF object
-                pdf.destroy();
-            })
-            .catch(function (err) {
-                console.error(err);
-                alert('Failed to create fillable form PDF');
-            })
-    };
-
-    // Read values from EJ2 form controls
-    function getFormValues() {
-        var name = document.querySelector('#name');
-        var email = document.querySelector('#email');
-
-        // Get EJ2 component instances
-        var genderInstance = ej.base.getComponent(document.querySelector('#gender'), 'dropdownlist');
-        var dobInstance = ej.base.getComponent(document.querySelector('#dob'), 'datepicker');
-        var stateInstance = ej.base.getComponent(document.querySelector('#state'), 'dropdownlist');
-        var newsletterInstance = ej.base.getComponent(document.querySelector('#newsletter'), 'checkbox');
-
-        // Format date to mm/dd/yyyy
-        var dob = '';
-        if (dobInstance && dobInstance.value) {
-            var date = dobInstance.value;
-            var month = ('0' + (date.getMonth() + 1)).slice(-2);
-            var day = ('0' + date.getDate()).slice(-2);
-            var year = date.getFullYear();
-            dob = month + '/' + day + '/' + year;
-        }
-
-        return {
-            name: name ? name.value : '',
-            gender: genderInstance ? genderInstance.value : 'Male',
-            dob: dob,
-            email: email ? email.value : '',
-            state: stateInstance ? stateInstance.value : '',
-            newsletter: newsletterInstance ? newsletterInstance.checked : false
-        };
-    }
-    // Find PDF form field by name
-    function findByName(form, name) {
-        for (var i = 0; i < form.count; i++) {
-            var field = form.fieldAt(i);
-            if (field && field.name === name) return field;
-        }
-        return undefined;
-    }
-    //   Fetch URL and return Uint8Array
-    function fetchAsUint8Array(url) {
-        return fetch(url, { cache: 'no-cache' })
-            .then(function (res) {
-                if (!res.ok) {
-                    throw new Error('Failed to fetch ' + url + ': ' + res.status + ' ' + res.statusText);
-                }
-                return res.arrayBuffer();
-            })
-            .then(function (buf) {
-                return new Uint8Array(buf);
-            });
+        // Create PDF document and page
+        const document = new ej.pdf.PdfDocument();
+        const page = document.addPage();
+        const graphics = page.graphics;
+        // Fonts
+        const font = document.embedFont(
+            ej.pdf.PdfFontFamily.helvetica,
+            20,
+            ej.pdf.PdfFontStyle.regular
+        );
+        const radioFont = document.embedFont(
+            ej.pdf.PdfFontFamily.helvetica,
+            13,
+            ej.pdf.PdfFontStyle.regular
+        );
+        const comboFont = document.embedFont(
+            ej.pdf.PdfFontFamily.helvetica,
+            10,
+            ej.pdf.PdfFontStyle.regular
+        );
+        // Common styles
+        const black = { r: 0, g: 0, b: 0 };
+        const white = { r: 255, g: 255, b: 255 };
+        const brush = new ej.pdf.PdfBrush(black);
+        const solidBorder = new ej.pdf.PdfInteractiveBorder({
+            width: 1,
+            style: ej.pdf.PdfBorderStyle.solid
+        });
+        // Name field
+        graphics.drawString('Name:', font, { x: 10, y: 58, width: 300, height: 400 }, brush);
+        const nameField = new ej.pdf.PdfTextBoxField(page, 'Name', {
+            x: 100,
+            y: 60,
+            width: 200,
+            height: 22
+        });
+        document.form.add(nameField);
+        // Gender field
+        graphics.drawString('Gender:', font, { x: 10, y: 98, width: 300, height: 400 }, brush);
+        graphics.drawString('Male', radioFont, { x: 100, y: 105, width: 300, height: 400 }, brush);
+        graphics.drawString('Female', radioFont, { x: 150, y: 105, width: 300, height: 400 }, brush);
+        graphics.drawString('Other', radioFont, { x: 220, y: 105, width: 300, height: 400 }, brush);
+        const genderField = new ej.pdf.PdfRadioButtonListField(page, 'Gender', {
+            items: [
+                { name: 'Male', bounds: { x: 130, y: 108, width: 14, height: 10 } },
+                { name: 'Female', bounds: { x: 195, y: 108, width: 14, height: 10 } },
+                { name: 'Other', bounds: { x: 255, y: 108, width: 14, height: 10 } }
+            ],
+            selectedIndex: 1
+        });
+        document.form.add(genderField);
+        // Mail field
+        graphics.drawString('Mail:', font, { x: 10, y: 138, width: 300, height: 400 }, brush);
+        const mailField = new ej.pdf.PdfTextBoxField(page, 'Name', {
+            x: 100,
+            y: 140,
+            width: 200,
+            height: 22
+        });
+        document.form.add(mailField);
+        // State dropdown
+        graphics.drawString('State:', font, { x: 10, y: 178, width: 300, height: 400 }, brush);
+        const stateField = new ej.pdf.PdfComboBoxField(
+            page,
+            'State',
+            { x: 100, y: 180, width: 200, height: 22 },
+            {
+                items: [
+                    { text: 'California', value: 'CA' },
+                    { text: 'Washington D.C', value: 'DC' },
+                    { text: 'London', value: 'LN' }
+                ],
+                color: black,
+                backColor: white,
+                borderColor: black,
+                border: solidBorder,
+                selectedIndex: 0,
+                font: comboFont
+            }
+        );
+        document.form.add(stateField);
+        // Date of birth field
+        graphics.drawString('DOB:', font, { x: 10, y: 218, width: 300, height: 400 }, brush);
+        const dateField = new ej.pdf.PdfTextBoxField(page, 'DateField', {
+            x: 100,
+            y: 220,
+            width: 200,
+            height: 22
+        });
+        // Default date value
+        dateField.text = '18/08/2003';
+        // Date format validation
+        const format = 'yyyy-mm-dd';
+        dateField.actions.format =
+            new ej.pdf.PdfJavaScriptAction(`AFDate_FormatEx("${format}");`);
+        dateField.actions.keyPressed =
+            new ej.pdf.PdfJavaScriptAction(`AFDate_KeystrokeEx("${format}"):`);
+        dateField.actions.validate =
+            new ej.pdf.PdfJavaScriptAction(`AFDate_Validate("${format}");`);
+        document.form.add(dateField);
+        // Terms and conditions checkbox
+        graphics.drawString('T&C', font, { x: 10, y: 258, width: 300, height: 400 }, brush);
+        const checkboxField = new ej.pdf.PdfCheckBoxField(
+            'AcceptTerms',
+            { x: 100, y: 262, width: 14, height: 14 },
+            page,
+            {
+                toolTip: 'Accept the terms and conditions',
+                backColor: white,
+                borderColor: black,
+                border: solidBorder,
+                checked: true
+            }
+        );
+        document.form.add(checkboxField);
+        // Submit button
+        const buttonField = new ej.pdf.PdfButtonField(
+            page,
+            'Submit',
+            { x: 10, y: 300, width: 120, height: 28 },
+            {
+                toolTip: 'Submit form',
+                color: white,
+                backColor: { r: 0, g: 122, b: 204 },
+                borderColor: black,
+                border: solidBorder,
+                text: 'Submit',
+                highlightMode: ej.pdf.PdfHighlightMode.push
+            }
+        );
+        // Generate button appearance
+        buttonField.setAppearance(true);
+        document.form.add(buttonField);
+        // Save PDF
+        document.save('FormCreation.pdf');
+        // Release resources
+        document.destroy();
     }
 </script>
-
-<style>
-    :root {
-        --bg: #f7f7f7;
-        --border: #d6d6d6;
-        --text: #333;
-        --primary: #4a90e2;
-        --btn-bg: #e9ecef;
-    }
-    .control-section {
-        border: 2px solid black;
-        padding: 10px;
-    }
-    .form-group {
-        margin-bottom: 12px;
-    }
-    label {
-        display: block;
-        font-weight: 600;
-        margin-bottom: 6px;
-    }
-    .e-input,
-    .e-dropdownlist,
-    .e-datepicker {
-        width: 100%;
-        height: 30px;
-    }
-    .e-datepicker{
-        height: auto;
-    }
-    .e-input-group {
-        width: 100%;
-    }
-    input.e-input {
-        width: 100%;
-        box-sizing: border-box;
-    }
-    .inline {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        margin-top: 4px;
-    }
-    .btn-row {
-        display: flex;
-        gap: 12px;
-        margin-top: 14px;
-        flex-wrap: wrap;
-    }
-    .btn {
-        background: var(--btn-bg);
-        border: 1px solid var(--border);
-        border-radius: 6px;
-        padding: 8px 14px;
-        font-weight: 600;
-        cursor: pointer;
-    }
-    .btn.primary {
-        background: var(--primary);
-        color: #fff;
-        border-color: var(--primary);
-    }
-</style>

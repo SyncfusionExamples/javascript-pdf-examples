@@ -3,27 +3,29 @@
     <script src="https://cdn.syncfusion.com/ej2/33.2.12/dist/ej2.min.js"></script>
 </head>
 <div class="container py-4">
-    <h1 class="h4 mb-3">Remove Bookmark Using Index from PDF</h1>
-    <button id="indexBtn" class="btn btn-primary">Remove Bookmark</button>
+    <h1 class="h4 mb-3">Remove Annotations from PDF</h1>
+    <button id="removeBtn" class="btn btn-primary">Remove Annotations</button>
 </div>
 
 <script>
-    // Remove Bookmark (By Index) functionality
-    var indexBtn = new ej.buttons.Button({}, '#indexBtn');
-    indexBtn.element.onclick = removeBookmarkIndex;
-    //Method to remove bookmark on PDF
-    function removeBookmarkIndex() {
-        const templateUrl = 'https://cdn.syncfusion.com/content/pdf-resources/bookmarks.pdf';
+    // Remove Annotation functionality
+    var removeBtn = new ej.buttons.Button({}, '#removeBtn');
+    removeBtn.element.onclick = removeAnnotations;
+    //Method to remove annotation on PDF
+    function removeAnnotations() {
+        const templateUrl = 'https://cdn.syncfusion.com/content/pdf-resources/Annotation.pdf';
         readFromUrl(templateUrl)
             .then(function (pdfBytes) {
                 // Create a new PDF document instance
                 let document = new ej.pdf.PdfDocument(pdfBytes);
-                // Get bookmarks
-                var bookmarks = document.bookmarks;
-                // Remove the bookmark from the document at the index 1
-                var bookmark = bookmarks.remove(1);
+                // Access the first page
+                var page = document.getPage(0);
+                // Access first annotation from the PDF page
+                var annotation = page.annotations.at(0);
+                // Remove an annotation from the collection
+                page.annotations.remove(annotation);
                 // Save the Updated PDF
-                document.save('Bookmark.pdf');
+                document.save('RemoveAnnotations.pdf');
                 // Destroy the document instance to release memory
                 document.destroy();
             })
