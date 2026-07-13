@@ -1,0 +1,57 @@
+<head>
+    <!-- Syncfusion JavaScript PDF Library (CDN) -->
+    <script src="https://cdn.syncfusion.com/ej2/33.2.12/dist/ej2.min.js"></script>
+    <!-- Syncfusion components styles (CDN) -->
+    <link rel="stylesheet" href="https://cdn.syncfusion.com/ej2/33.2.12/material.css">
+</head>
+
+<div class="container py-4">
+    <h1 class="h4 mb-3">Modify PDF Forms</h1>
+</div>
+<button id="modifyForm" class="btn btn-primary" style="margin: 1%;">Generate PDF</button>
+
+<script>
+    // Create and initialize the PDF creation button
+    var modifyForm = new ej.buttons.Button();
+    modifyForm.appendTo('#modifyForm');
+    // Generate an PDF Form when the button is clicked
+    modifyForm.element.onclick = modifyFormFields;
+
+    function modifyFormFields() {
+        fetchAsUint8Array(
+            'https://cdn.syncfusion.com/content/pdf-resources/form-filling-document.pdf'
+        )
+            .then(function (pdfBytes) {
+                // Create a PDF document instance from the loaded PDF bytes
+                var pdf = new ej.pdf.PdfDocument(pdfBytes);
+                var form = pdf.form;
+                // Fill the Name text box field
+                var nameField = form.fieldAt(1);
+                if (nameField) {
+                    nameField.text = 'John Allister';
+                    nameField.setAppearance(true);
+                }
+                // Save the filled PDF document
+                pdf.save('ModifiedForm.pdf');
+                // Release PDF resources
+                pdf.destroy();
+            })
+            .catch(function (err) {
+                console.error(err);
+                alert('Failed to create fillable form PDF');
+            })
+    };
+    //   Fetch URL and return Uint8Array
+    function fetchAsUint8Array(url) {
+        return fetch(url, { cache: 'no-cache' })
+            .then(function (res) {
+                if (!res.ok) {
+                    throw new Error('Failed to fetch ' + url + ': ' + res.status + ' ' + res.statusText);
+                }
+                return res.arrayBuffer();
+            })
+            .then(function (buf) {
+                return new Uint8Array(buf);
+            });
+    }
+</script>

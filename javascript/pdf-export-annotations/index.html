@@ -1,0 +1,45 @@
+<head>
+    <!-- Syncfusion JavaScript PDF Library (CDN) -->
+    <script src="https://cdn.syncfusion.com/ej2/33.2.12/dist/ej2.min.js"></script>
+</head>
+<div class="container py-4">
+    <h1 class="h4 mb-3">Export Annotations from PDF</h1>
+    <button id="exportBtn" class="btn btn-primary">Export Annotations</button>
+</div>
+
+<script>
+    // Export Annotation functionality
+    var exportBtn = new ej.buttons.Button({}, '#exportBtn');
+    exportBtn.element.onclick = exportAnnotations;
+    //Method to export annotation on PDF
+    function exportAnnotations() {
+        const templateUrl = 'https://cdn.syncfusion.com/content/pdf-resources/Annotation.pdf';
+        readFromUrl(templateUrl)
+            .then(function (pdfBytes) {
+                // Create a new PDF document instance
+                let document = new ej.pdf.PdfDocument(pdfBytes);
+                // Sets export data format as JSON for annotation export settings
+                let settings = new ej.pdf.PdfAnnotationExportSettings();
+                settings.exportAppearance = true;
+                settings.dataFormat = ej.pdf.DataFormat.json;
+                // Export annotations to JSON format
+                document.exportAnnotations('ExportAnnotations.json', settings);
+                // Destroy the document instance to release memory
+                document.destroy();
+            })
+    }
+
+    // Fetch helper
+    function readFromUrl(url) {
+        return fetch(url, { cache: 'no-cache' })
+            .then(function (res) {
+                if (!res.ok) {
+                    throw new Error('Failed to fetch ' + url + ': ' + res.status + ' ' + res.statusText);
+                }
+                return res.arrayBuffer();
+            })
+            .then(function (buf) {
+                return new Uint8Array(buf);
+            });
+    }
+</script>

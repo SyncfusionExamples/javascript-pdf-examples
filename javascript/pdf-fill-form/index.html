@@ -1,0 +1,90 @@
+<head>
+    <!-- Syncfusion JavaScript PDF Library (CDN) -->
+    <script src="https://cdn.syncfusion.com/ej2/33.2.12/dist/ej2.min.js"></script>
+    <!-- Syncfusion components styles (CDN) -->
+    <link rel="stylesheet" href="https://cdn.syncfusion.com/ej2/33.2.12/material.css">
+</head>
+
+<div class="container py-4">
+    <h1 class="h4 mb-3">PDF Forms</h1>
+</div>
+<button id="editForm" class="btn btn-primary" style="margin: 1%;">Generate PDF</button>
+
+<script>
+    // Create and initialize the PDF creation button
+    var editForm = new ej.buttons.Button();
+    editForm.appendTo('#editForm');
+    // Generate an PDF Form when the button is clicked
+    editForm.element.onclick = editFormFields;
+
+    function editFormFields() {
+        fetchAsUint8Array(
+            'https://cdn.syncfusion.com/content/pdf-resources/form-filling-document.pdf'
+        )
+            .then(function (pdfBytes) {
+                // Create a PDF document instance from the loaded PDF bytes
+                var pdf = new ej.pdf.PdfDocument(pdfBytes);
+                var form = pdf.form;
+                // Fill the Date text box field
+                var dateField = form.fieldAt(0);
+                if (dateField) {
+                    dateField.text = '07/07/2026';
+                    dateField.setAppearance(true);
+                }
+                // Fill the Name text box field
+                var nameField = form.fieldAt(1);
+                if (nameField) {
+                    nameField.text = 'John Allister';
+                    nameField.setAppearance(true);
+                }
+                // Fill the Email text box field
+                var mailField = form.fieldAt(2);
+                if (mailField) {
+                    mailField.text = 'allister.john@example.com';
+                    mailField.setAppearance(true);
+                }
+                // Fill the Gender radio button field
+                var genderField = form.fieldAt(3);
+                if (genderField) {
+                    // Select the option at index 2 (Female)
+                    genderField.selectedIndex = 2;
+                    genderField.setAppearance(true);
+                }
+                // Fill the ListBox/Dropdown field
+                var dropdownField = form.fieldAt(4);
+                if (dropdownField) {
+                    // Select the item at index 4
+                    dropdownField.selectedIndex = 4;
+                    dropdownField.setAppearance(true);
+                }
+                // Update the CheckBox field
+                var checkboxField = form.fieldAt(5);
+                if (checkboxField) {
+                    // Set tooltip text
+                    checkboxField.toolTip = 'Check Box Field';
+                    checkboxField.setAppearance(true);
+                }
+                // Save the filled PDF document
+                pdf.save('FillForm.pdf');
+                // Release PDF resources
+                pdf.destroy();
+            })
+            .catch(function (err) {
+                console.error(err);
+                alert('Failed to create fillable form PDF');
+            })
+    };
+    //   Fetch URL and return Uint8Array
+    function fetchAsUint8Array(url) {
+        return fetch(url, { cache: 'no-cache' })
+            .then(function (res) {
+                if (!res.ok) {
+                    throw new Error('Failed to fetch ' + url + ': ' + res.status + ' ' + res.statusText);
+                }
+                return res.arrayBuffer();
+            })
+            .then(function (buf) {
+                return new Uint8Array(buf);
+            });
+    }
+</script>
