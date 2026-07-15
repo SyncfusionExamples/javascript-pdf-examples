@@ -6,7 +6,7 @@ import { Save } from '@syncfusion/ej2/file-utils';
 
 const DEFAULT_PDF_URL = 'https://cdn.syncfusion.com/content/pdf-resources/pdf-succinctly.pdf';
 // Initialize button
-const splitBtnSf = new Button();
+const splitBtnSf = new Button({ cssClass: `e-primary`});
 splitBtnSf.appendTo('#splitBtn');
 splitBtnSf.element.onclick = splitPDF;
 

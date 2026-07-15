@@ -1,7 +1,7 @@
 import { Button } from '@syncfusion/ej2-buttons';
 import { PdfDocument, PdfPageSettings, PdfMargins, PdfPage, PdfGraphics, PdfBrush, PdfPen, PdfFontFamily, PdfStandardFont } from '@syncfusion/ej2-pdf';
 
-const addBtn = new Button();
+const addBtn = new Button({ cssClass: `e-primary`});
 addBtn.appendTo('#addBtn');
 addBtn.element.onclick = (): void => {
     const doc = new PdfDocument();

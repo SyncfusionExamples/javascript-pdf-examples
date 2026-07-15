@@ -1,6 +1,7 @@
 <head>
     <!-- Syncfusion JavaScript PDF Library (CDN) -->
-    <script src="https://cdn.syncfusion.com/ej2/33.2.12/dist/ej2.min.js"></script>
+    <script src="https://cdn.syncfusion.com/ej2/34.1.29/dist/ej2.min.js"></script>
+    <link href="https://cdn.syncfusion.com/ej2/34.1.29/ej2-buttons/styles/material.css" rel="stylesheet">
     <!-- Syncfusion components styles (CDN) -->
     <link rel="stylesheet" href="https://cdn.syncfusion.com/ej2/33.2.12/material.css">
 </head>
@@ -12,7 +13,7 @@
 
 <script>
     // Create and initialize the PDF creation button
-    var formBtn = new ej.buttons.Button();
+    var formBtn = new ej.buttons.Button({ cssClass: 'e-primary' });
     formBtn.appendTo('#formBtn');
     // Generate an PDF Form when the button is clicked
     formBtn.element.onclick = createFormPDF;

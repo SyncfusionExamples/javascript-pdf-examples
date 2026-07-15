@@ -1,6 +1,7 @@
 <head>
     <!-- Syncfusion JavaScript PDF Library (CDN) -->
-    <script src="https://cdn.syncfusion.com/ej2/33.2.12/dist/ej2.min.js"></script>
+    <script src="https://cdn.syncfusion.com/ej2/34.1.29/dist/ej2.min.js"></script>
+    <link href="https://cdn.syncfusion.com/ej2/34.1.29/ej2-buttons/styles/material.css" rel="stylesheet">
 </head>
 <div class="container py-4">
     <h1 class="h4 mb-3">Modify Annotations in PDF</h1>
@@ -9,7 +10,7 @@
 
 <script>
     // Modify Annotation functionality
-    var modifyBtn = new ej.buttons.Button({}, '#modifyBtn');
+    var modifyBtn = new ej.buttons.Button({ cssClass: 'e-primary' }, '#modifyBtn');
     modifyBtn.element.onclick = modifyAnnotations;
     //Method to modify annotation on PDF
     function modifyAnnotations() {
@@ -22,12 +23,14 @@
                 var page = document.getPage(0);
                 // Get the first annotation of the page
                 var annotation = page.annotations.at(0);
-                // Modify its properties
-                if (annotation) {
-                    annotation.text = 'Pop Annotation';
-                    annotation.color = { r: 0, g: 128, b: 255 };
-                    annotation.opacity = 0.5;
-                }
+                annotation.name = 'Pop Annotation';
+                annotation.text = 'Pop Annotation';
+                annotation.color = { r: 255, g: 0, b: 0 };
+                annotation.opacity = 0.5;
+                annotation.author = 'John';
+                annotation.subject = 'Popup';
+                annotation.open = false;
+                annotation.setAppearance(true);
                 // Save the Updated PDF
                 document.save('ModifyAnnotations.pdf');
                 // Destroy the document instance to release memory

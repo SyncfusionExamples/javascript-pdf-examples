@@ -1,7 +1,7 @@
 import { Button } from '@syncfusion/ej2-buttons';
 import { PdfDocument, PdfSignatureField, PdfSignature, CryptographicStandard, DigestAlgorithm, PdfBitmap } from '@syncfusion/ej2-pdf';
 
-const signBtn = new Button();
+const signBtn = new Button({ cssClass: `e-primary`});
 signBtn.appendTo('#signBtn');
 signBtn.element.onclick = async (): Promise<void> => {
     try {

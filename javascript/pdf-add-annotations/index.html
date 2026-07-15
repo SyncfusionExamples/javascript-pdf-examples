@@ -1,0 +1,43 @@
+<head>
+    <!-- Syncfusion JavaScript PDF Library (CDN) -->
+    <script src="https://cdn.syncfusion.com/ej2/34.1.29/dist/ej2.min.js"></script>
+    <link href="https://cdn.syncfusion.com/ej2/34.1.29/ej2-buttons/styles/material.css" rel="stylesheet">
+</head>
+<div class="container py-4" style="margin: 5%;">
+    <h1 class="h4 mb-3">Add Annotations in PDF</h1>
+    <button id="addBtn" class="btn btn-primary">Add Annotations</button>
+</div>
+
+<script>
+    // Create the "Add Annotations" button
+    var addBtn = new ej.buttons.Button({ cssClass: 'e-primary' }, '#addBtn');
+    // Call the method when the button is clicked
+    addBtn.element.onclick = addAnnotations;
+    // Create a PDF document and add a popup annotation
+    function addAnnotations() {
+        // Create a new PDF document
+        var document = new ej.pdf.PdfDocument();
+        // Add a page to the document
+        var page = document.addPage();
+        // Creates a new line annotation.
+        var lineAnnotation = new ej.pdf.PdfLineAnnotation({ x: 180, y: 620 }, { x: 300, y: 620 }, {
+            text: 'Line Annotation',
+            author: 'Syncfusion',
+            color: { r: 255, g: 0, b: 0 },
+            innerColor: { r: 255, g: 255, b: 0 },
+            lineEndingStyle: new ej.pdf.PdfAnnotationLineEndingStyle({ begin: ej.pdf.PdfLineEndingStyle.circle, end: ej.pdf.PdfLineEndingStyle.diamond }),
+            opacity: 0.5
+        });
+        // Assigns the leader line
+        lineAnnotation.leaderExt = 0;
+        lineAnnotation.leaderLine = 0;
+        // Assigns the line caption type
+        lineAnnotation.caption = new ej.pdf.PdfAnnotationCaption({ cap: true, type: ej.pdf.PdfLineCaptionType.inline });
+        // Adds annotation to the page
+        page.annotations.add(lineAnnotation);
+        // Save and download the PDF.
+        document.save('Annotations.pdf');
+        // Release resources
+        document.destroy();
+    }
+</script>

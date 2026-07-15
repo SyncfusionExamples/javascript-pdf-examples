@@ -2,7 +2,7 @@ import { Button } from '@syncfusion/ej2-buttons';
 import { PdfDocument, PdfPage, PdfBrush, PdfFontFamily, PdfDestination, PdfBookmark, PdfStandardFont, Rectangle, PdfBookmarkBase } from '@syncfusion/ej2-pdf';
 
 
-const addBtn = new Button();
+const addBtn = new Button({ cssClass: `e-primary`});
 addBtn.appendTo('#addBtn');
 addBtn.element.onclick = addBookmarks;
 
@@ -75,7 +75,7 @@ function addBookmarks() {
 }
 
 // Create the Remove Bookmark button
-const removeBtn = new Button();
+const removeBtn = new Button({ cssClass: `e-primary`});
 removeBtn.appendTo('#removeBtn');
 removeBtn.element.onclick = removeBookmark;
 

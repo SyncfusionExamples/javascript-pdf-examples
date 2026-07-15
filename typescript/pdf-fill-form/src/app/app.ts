@@ -2,7 +2,7 @@
 import { PdfDocument, PdfForm, PdfTextBoxField, PdfCheckBoxField, PdfRadioButtonListField, PdfListBoxField } from '@syncfusion/ej2-pdf';
 import { Button } from '@syncfusion/ej2-buttons';
 // Create and initialize the PDF creation button
-var editForm = new Button();
+var editForm = new Button({ cssClass: `e-primary`});
 editForm.appendTo('#editForm');
 // Generate an PDF form when the button is clicked
 editForm.element.onclick = editFormFields;

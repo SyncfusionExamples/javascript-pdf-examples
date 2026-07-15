@@ -2,7 +2,7 @@ import { PdfDocument, PdfTextBoxField, PdfStandardFont, PdfFontFamily, PdfFontSt
 import { Button } from '@syncfusion/ej2-buttons';
 
 // Create button
-const formBtn = new Button();
+const formBtn = new Button({ cssClass: `e-primary`});
 formBtn.appendTo('#formBtn');
 // Generate PDF form on click
 formBtn.element.onclick = createFormFields;

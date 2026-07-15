@@ -2,7 +2,7 @@ import { Button } from '@syncfusion/ej2-buttons';
 import { PdfDocument, PdfBrush, PdfFontFamily, PdfFontStyle, PdfListItem, PdfListItemCollection, PdfOrderedList, PdfStringFormat, PdfUnorderedList, PdfUnorderedListStyle } from '@syncfusion/ej2-pdf';
 
 // Create Ordered List button
-let listBtn: Button = new Button();
+let listBtn: Button = new Button({ cssClass: `e-primary`});
 listBtn.appendTo('#listBtn');
 listBtn.element.onclick = (): void => {
     let pdf = new PdfDocument();
