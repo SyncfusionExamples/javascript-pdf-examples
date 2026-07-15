@@ -49,35 +49,19 @@
                 // Name field
                 // -------------------------
                 const nameField = form.fieldAt(1);
+                nameField.maxLength = 0;
+                nameField.required = false;
+                nameField.insertSpaces = false;
+                nameField.multiLine = false;
+                nameField.toolTip = "Text Box Tooltip";
+                nameField.borderColor = { r: 0, g: 0, b: 0 };
+                nameField.backColor = { r: 218, g: 234, b: 0 };
+                nameField.font = new ej.pdf.PdfStandardFont(ej.pdf.PdfFontFamily.helvetica, 10);
+                nameField.visibility = ej.pdf.PdfFormFieldVisibility.visible;
                 nameField.text = 'John Allister';
                 nameField.defaultValue = 'John Allister';
                 nameField.textAlignment = ej.pdf.PdfTextAlignment.center;
                 nameField.setAppearance(true);
-                // -------------------------
-                // Email field
-                // -------------------------
-                const mailField = form.fieldAt(2);
-                mailField.textAlignment = ej.pdf.PdfTextAlignment.right;
-                // Set field background color to red
-                mailField.backColor = { r: 255, g: 0, b: 0 };
-                mailField.setAppearance(true);
-                // -------------------------
-                // Gender radio button field
-                // -------------------------
-                const radioField = form.fieldAt(3);
-                radioField.selectedIndex = 2;
-                // -------------------------
-                // State dropdown field
-                // -------------------------
-                const stateField = form.fieldAt(4);
-                stateField.selectedIndex = 21;
-                stateField.textAlignment = ej.pdf.PdfTextAlignment.center;
-                // -------------------------
-                // Checkbox field
-                // -------------------------
-                const checkboxField = form.fieldAt(5);
-                checkboxField.checked = true;
-                checkboxField.setAppearance(true);
                 // Save the updated PDF
                 pdf.save('ModifiedForm.pdf');
                 // Release resources

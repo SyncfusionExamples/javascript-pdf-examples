@@ -1,5 +1,5 @@
 
-import { PdfDocument, PdfTextBoxField, PdfTextAlignment, PdfJavaScriptAction, PdfCheckBoxField, PdfComboBoxField, PdfForm, PdfRadioButtonListField } from '@syncfusion/ej2-pdf';
+import { PdfDocument, PdfTextBoxField, PdfTextAlignment, PdfJavaScriptAction, PdfFormFieldVisibility, PdfStandardFont, PdfForm, PdfFontFamily } from '@syncfusion/ej2-pdf';
 import { Button } from '@syncfusion/ej2-buttons';
 
 // Create and initialize the PDF creation button
@@ -37,36 +37,20 @@ function modifyFormFields() {
             // -------------------------
             // Name field
             // -------------------------
-            const nameField = form.fieldAt(1) as PdfTextBoxField;
+            const nameField = form.fieldAt(1) as PdfTextBoxField
+            nameField.maxLength = 0;
+            nameField.required = false;
+            nameField.insertSpaces = false;
+            nameField.multiLine = false;
+            nameField.toolTip = "Text Box Tooltip";
+            nameField.borderColor = { r: 0, g: 0, b: 0 };
+            nameField.backColor = { r: 218, g: 234, b: 0 };
+            nameField.font = new PdfStandardFont(PdfFontFamily.helvetica, 10);
+            nameField.visibility = PdfFormFieldVisibility.visible;
             nameField.text = 'John Allister';
             nameField.defaultValue = 'John Allister';
             nameField.textAlignment = PdfTextAlignment.center;
             nameField.setAppearance(true);
-            // -------------------------
-            // Email field
-            // -------------------------
-            const mailField = form.fieldAt(2) as PdfTextBoxField;
-            mailField.textAlignment = PdfTextAlignment.right;
-            // Set field background color to red
-            mailField.backColor = { r: 255, g: 0, b: 0 };
-            mailField.setAppearance(true);
-            // -------------------------
-            // Gender radio button field
-            // -------------------------
-            const radioField = form.fieldAt(3) as PdfRadioButtonListField;
-            radioField.selectedIndex = 2;
-            // -------------------------
-            // State dropdown field
-            // -------------------------
-            const stateField = form.fieldAt(4) as PdfComboBoxField;
-            stateField.selectedIndex = 21;
-            stateField.textAlignment = PdfTextAlignment.center;
-            // -------------------------
-            // Checkbox field
-            // -------------------------
-            const checkboxField = form.fieldAt(5) as PdfCheckBoxField;
-            checkboxField.checked = true;
-            checkboxField.setAppearance(true);
             // Save the updated PDF
             pdf.save('ModifiedForm.pdf');
             // Release resources
