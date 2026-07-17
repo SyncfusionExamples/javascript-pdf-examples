@@ -1,14 +1,14 @@
-# How to Flow Text Across Pages in PDF in TypeScript
+# How to Draw Text with Various Formatting in a PDF using TypeScript
 
-This project is a complete working application to flow text accross pages in PDF document using TypeScript.
+This project is a complete working application to draw text with various formatting in a PDF document using TypeScript.
 
 ## Getting Started
 
-To get started you need to clone the `pdf-flow-text` repository and navigate to `pdf-flow-text` location.
+To get started you need to clone the `pdf-draw-text` repository and navigate to `pdf-draw-text` location.
 
 ```
-git clone https://github.com/SyncfusionExamples/javascript-pdf-examples.git pdf-flow-text
-cd pdf-flow-text
+git clone https://github.com/SyncfusionExamples/javascript-pdf-examples.git pdf-draw-text
+cd pdf-draw-text
 ```
 
 ## Installing
