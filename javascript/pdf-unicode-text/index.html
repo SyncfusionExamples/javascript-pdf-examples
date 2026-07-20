@@ -1,0 +1,47 @@
+<head>
+    <!-- Syncfusion JavaScript PDF Library (CDN) -->
+    <script src="https://cdn.syncfusion.com/ej2/34.1.29/dist/ej2.min.js"></script>
+    <link href="https://cdn.syncfusion.com/ej2/34.1.29/ej2-buttons/styles/material.css" rel="stylesheet">
+</head>
+<div class="container py-4" style="margin: 5%;">
+    <h1 class="h4 mb-3">Render Unicode Text</h1>
+    <button id="unicodeText" class="btn btn-primary">Generate PDF</button>
+</div>
+
+<script>
+    // Initialize a new Button instance
+    var button = new ej.buttons.Button({ cssClass: `e-primary` });
+    // Append the button to the DOM element with id 'unicodeText'
+    button.appendTo('#unicodeText');
+    // Font URLs
+    var inputData = 'https://cdn.syncfusion.com/content/pdf-resources/noto-naskh-arabic-regular.ttf';
+    // Add click event handler to the button
+    button.element.onclick = async function () {
+        // Load Arabic font bytes
+        const arabicFontBytes = await fetchAsUint8Array(inputData);
+        // Create PDF document and page
+        const document = new ej.pdf.PdfDocument();
+        const page = document.addPage();
+        const graphics = page.graphics;
+        const font = new ej.pdf.PdfTrueTypeFont(arabicFontBytes, 14);
+        // Define the Unicode text to be displayed
+        const text = "中文 العربية Ελληνικά 日本語 - Sample Unicode Text";
+        // Draw the Unicode text on the PDF page
+        graphics.drawString(text, font, { x: 200, y: 50, width: 300, height: 100 }, new ej.pdf.PdfBrush({ r: 126, g: 70, b: 19 }));
+        // Save the PDF document
+        document.save("DrawText.pdf");
+        document.destroy();
+    };
+
+    // Helper: fetch font as Uint8Array
+    function fetchAsUint8Array(url) {
+        return fetch(url, { cache: 'no-cache' })
+            .then(function (res) {
+                if (!res.ok) throw new Error("Failed to fetch " + url + ": " + res.status + " " + res.statusText);
+                return res.arrayBuffer();
+            })
+            .then(function (buf) {
+                return new Uint8Array(buf);
+            });
+    }
+</script>
