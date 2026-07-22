@@ -3,7 +3,7 @@ import { PdfDocument } from '@syncfusion/ej2-pdf';
 import { PdfRedactor, PdfRedactionRegion } from '@syncfusion/ej2-pdf-data-extract';
 
 // Create Redact button
-let redactbtn: Button = new Button();
+let redactbtn: Button = new Button({ cssClass: `e-primary`});
 redactbtn.appendTo('#redactbtn');
 redactbtn.element.onclick = redactPdf;
 // Template PDF URL

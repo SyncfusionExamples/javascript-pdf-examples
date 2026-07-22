@@ -1,0 +1,67 @@
+<head>
+    <!-- Syncfusion JavaScript PDF Library (CDN) -->
+    <script src="https://cdn.syncfusion.com/ej2/34.1.29/dist/ej2.min.js"></script>
+    <link href="https://cdn.syncfusion.com/ej2/34.1.29/ej2-buttons/styles/material.css" rel="stylesheet">
+</head>
+<div class="container py-4" style="margin: 5%;">
+    <h1 class="h4 mb-3">Flow Text</h1>
+    <button id="textFlow" class="btn btn-primary">Generate PDF</button>
+</div>
+
+<script>
+    // Initialize a new Button instance
+    var button = new ej.buttons.Button({ cssClass: `e-primary`});
+    // Append the button to the DOM element with id 'textFlow'
+    button.appendTo('#textFlow');
+    // Add click event handler to the button
+    button.element.onclick = function () {
+        // Fetch the text content from the external resource to draw
+        fetch('https://cdn.syncfusion.com/content/pdf-resources/pdf-textFlow.txt')
+            .then(function (resp) { return resp.ok ? resp.text() : ''; })
+            .catch(function () { return ''; })
+            .then(function (text) {
+                // Set the fetched text content to draw
+                var textContent = text || '';
+                // Create a new PDF document
+                var doc = new ej.pdf.PdfDocument();
+                // Add a new page to the document
+                var page = doc.addPage();
+                // Get the client size of the page for layout calculations
+                var clientSize = page.graphics.clientSize;
+                // Create an instance for layout format for drawing
+                var layoutFormat = new ej.pdf.PdfLayoutFormat();
+                // Set the layout type to paginate for the page layout format
+                layoutFormat.layout = ej.pdf.PdfLayoutType.paginate;
+                // Set the layout break type for the page
+                layoutFormat.break = ej.pdf.PdfLayoutBreakType.fitPage;
+                // Set the paginate bounds for the page
+                layoutFormat.paginateBounds = { x: 0, y: 0, width: clientSize.width, height: clientSize.height };
+                // Define a text element with styling and layout options
+                var element = {
+                    // The text string to render
+                    text: textContent,
+                    // Times Roman font at 14pt
+                    font: new ej.pdf.PdfStandardFont(ej.pdf.PdfFontFamily.timesRoman, 14),
+                    // Black color brush (RGB: 0,0,0)
+                    brush: new ej.pdf.PdfBrush({ r: 0, g: 0, b: 0 }),
+                    // Apply the pagination layout settings
+                    layoutFormat: layoutFormat
+                };
+                // Draw the text element on the page within the specified bounds
+                page.drawTextElement(element, {
+                    // X coordinate starting position
+                    x: 0,
+                    // Y coordinate starting position
+                    y: 0,
+                    // Width matches page width
+                    width: clientSize.width,
+                    // Height matches page height
+                    height: clientSize.height
+                });
+                // Save the PDF document
+                doc.save('TextFlowOutput.pdf');
+                // Destroy the document
+                doc.destroy();
+            });
+    };
+</script>

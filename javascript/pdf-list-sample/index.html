@@ -1,6 +1,7 @@
 <head>
     <!-- Syncfusion JavaScript PDF Library (CDN) -->
-    <script src="https://cdn.syncfusion.com/ej2/33.2.12/dist/ej2.min.js"></script>
+    <script src="https://cdn.syncfusion.com/ej2/34.1.29/dist/ej2.min.js"></script>
+    <link href="https://cdn.syncfusion.com/ej2/34.1.29/ej2-buttons/styles/material.css" rel="stylesheet">
 </head>
 
 <div class="container py-4">
@@ -10,7 +11,7 @@
 
 <script>
     // Create and initialize the Ordered List button
-    var listBtn = new ej.buttons.Button();
+    var listBtn = new ej.buttons.Button({ cssClass: 'e-primary' });
     listBtn.appendTo('#listBtn');
     // Generate an Ordered List PDF when the button is clicked
     listBtn.element.onclick = function () {

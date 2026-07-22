@@ -1,0 +1,83 @@
+<head>
+    <!-- Syncfusion JavaScript PDF Library (CDN) -->
+    <script src="https://cdn.syncfusion.com/ej2/34.1.29/dist/ej2.min.js"></script>
+    <link href="https://cdn.syncfusion.com/ej2/34.1.29/ej2-buttons/styles/material.css" rel="stylesheet">
+</head>
+<div class="container py-4" style="margin: 5%;">
+    <h1 class="h4 mb-3">Draw Text</h1>
+    <button id="drawText" class="btn btn-primary">Generate PDF</button>
+</div>
+
+<script>
+    // Initialize a new Button instance
+    var button = new ej.buttons.Button({ cssClass: `e-primary` });
+    // Append the button to the DOM element with id 'drawText'
+    button.appendTo('#drawText');
+    // Font URLs
+    var inputData = 'https://cdn.syncfusion.com/content/pdf-resources/noto-naskh-arabic-regular.ttf';
+    // Add click event handler to the button
+    button.element.onclick = async function () {
+        // Load Arabic font bytes
+        const arabicFontBytes = await fetchAsUint8Array(inputData);
+        // Create PDF document and page
+        const document = new ej.pdf.PdfDocument();
+        const page = document.addPage();
+        const graphics = page.graphics;
+        const bounds = graphics.clientSize;
+        // Common colors
+        const headingBrush = new ej.pdf.PdfBrush({ r: 126, g: 70, b: 19 });
+        const greenBrush = new ej.pdf.PdfBrush({ r: 0, g: 255, b: 0 });
+        const blueBrush = new ej.pdf.PdfBrush({ r: 0, g: 0, b: 255 });
+        const redBrush = new ej.pdf.PdfBrush({ r: 255, g: 0, b: 0 });
+        // Fonts
+        const headingFont = document.embedFont(ej.pdf.PdfFontFamily.helvetica, 20, ej.pdf.PdfFontStyle.bold);
+        const standardFont = document.embedFont(ej.pdf.PdfFontFamily.helvetica, 13, ej.pdf.PdfFontStyle.regular);
+        // Embedded TrueType font for Arabic text
+        const arabicFont = new ej.pdf.PdfTrueTypeFont(arabicFontBytes, 13);
+        // CJK font for Japanese text
+        const cjkFont = new ej.pdf.PdfCjkStandardFont(ej.pdf.PdfCjkFontFamily.heiseiKakuGothicW5, 13, ej.pdf.PdfFontStyle.bold);
+        //-------------------------------------------------------------------------
+        // Font Types Section
+        //-------------------------------------------------------------------------
+        graphics.drawString("Font types", headingFont, { x: 200, y: 50, width: bounds.width, height: bounds.height }, headingBrush);
+
+        // Standard font text
+        graphics.drawString("Hello World - Standard font type", standardFont, { x: 10, y: 100, width: bounds.width, height: bounds.height }, greenBrush);
+        // Arabic text using embedded TrueType font
+        graphics.drawString("سنبدأ بنظرة عامة مفاهيمية على مستند PDF بسيط. تم تصميم هذا الفصل ليكون توجيهًا مختصرًا قبل الغوص في مستند حقيقي وإنشاءه من البداية.\nيمكن تقسيم ملف PDF إلى أربعة أجزاء: الرأس والجسم والجدول الإسناد الترافقي والمقطورة. يضع الرأس الملف كملف PDF ، حيث يحدد النص المستند المرئي ، ويسرد جدول الإسناد الترافقي موقع كل شيء في الملف ، ويوفر المقطع الدعائي تعليمات حول كيفية بدء قراءة الملف. - TrueType Font type",
+            arabicFont, { x: 10, y: 130, width: bounds.width, height: bounds.height }, blueBrush
+        );
+        // Japanese text using CJK font
+        graphics.drawString("こんにちは世界 - CJK Font type", cjkFont, { x: 10, y: 250, width: bounds.width, height: bounds.height }, redBrush);
+        //-------------------------------------------------------------------------
+        // Text Alignment Section
+        //-------------------------------------------------------------------------
+        graphics.drawString("Alignment types", headingFont, { x: 200, y: 280, width: bounds.width, height: bounds.height }, headingBrush);
+        // Right-to-left text format
+        let textFormat = new ej.pdf.PdfStringFormat(ej.pdf.PdfTextAlignment.right, ej.pdf.PdfVerticalAlignment.bottom);
+        textFormat.wordSpacing = 2;
+        textFormat.characterSpacing = 1;
+        textFormat.textDirection = ej.pdf.PdfTextDirection.rightToLeft;
+        textFormat.lineLimit = false;
+        textFormat.noClip = true;
+        graphics.drawString("JavaScript PDF Library - Alignment Right and Bottom", standardFont, { x: 10, y: 150, width: 400, height: 200 }, blueBrush, textFormat);
+        // Left-top alignment
+        textFormat = new ej.pdf.PdfStringFormat(ej.pdf.PdfTextAlignment.left, ej.pdf.PdfVerticalAlignment.top);
+        graphics.drawString("JavaScript PDF Library - Alignment Left and Top", standardFont, { x: 10, y: 380, width: 400, height: 200 }, blueBrush, textFormat);
+        // Save and clean up
+        document.save("DrawText.pdf");
+        document.destroy();
+    };
+
+    // Helper: fetch font as Uint8Array
+    function fetchAsUint8Array(url) {
+        return fetch(url, { cache: 'no-cache' })
+            .then(function (res) {
+                if (!res.ok) throw new Error("Failed to fetch " + url + ": " + res.status + " " + res.statusText);
+                return res.arrayBuffer();
+            })
+            .then(function (buf) {
+                return new Uint8Array(buf);
+            });
+    }
+</script>

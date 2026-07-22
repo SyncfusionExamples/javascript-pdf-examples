@@ -1,7 +1,7 @@
 import { Button } from '@syncfusion/ej2-buttons';
 import { PdfDocument, PdfBookmarkBase } from '@syncfusion/ej2-pdf';
 
-const indexBtn = new Button();
+const indexBtn = new Button({ cssClass: `e-primary`});
 indexBtn.appendTo('#indexBtn');
 indexBtn.element.onclick = getBookmarkIndex;
 

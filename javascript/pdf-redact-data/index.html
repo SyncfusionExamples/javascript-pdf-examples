@@ -1,6 +1,7 @@
 <head>
     <!-- Syncfusion JavaScript PDF Library (CDN) -->
-    <script src="https://cdn.syncfusion.com/ej2/33.2.12/dist/ej2.min.js"></script>
+    <script src="https://cdn.syncfusion.com/ej2/34.1.29/dist/ej2.min.js"></script>
+    <link href="https://cdn.syncfusion.com/ej2/34.1.29/ej2-buttons/styles/material.css" rel="stylesheet">
 </head>
 <div class="container py-4">
     <h1 class="h4 mb-3">Redact Data in PDF document</h1>
@@ -8,7 +9,7 @@
 </div>
 
 <script>
-    var redactbtn = new ej.buttons.Button({}, '#redactbtn');
+    var redactbtn = new ej.buttons.Button({ cssClass: 'e-primary' }, '#redactbtn');
     redactbtn.element.onclick = redactPdf;
 	// Redact predefined regions from resource PDF
     function redactPdf() {

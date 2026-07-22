@@ -1,6 +1,7 @@
 <head>
     <!-- Syncfusion JavaScript PDF Library (CDN) -->
-    <script src="https://cdn.syncfusion.com/ej2/33.2.12/dist/ej2.min.js"></script>
+    <script src="https://cdn.syncfusion.com/ej2/34.1.29/dist/ej2.min.js"></script>
+    <link href="https://cdn.syncfusion.com/ej2/34.1.29/ej2-buttons/styles/material.css" rel="stylesheet">
     <!-- Syncfusion components styles (CDN) -->
     <link rel="stylesheet" href="https://cdn.syncfusion.com/ej2/33.2.12/material.css">
 </head>
@@ -12,28 +13,58 @@
 
 <script>
     // Create and initialize the PDF creation button
-    var modifyForm = new ej.buttons.Button();
+    var modifyForm = new ej.buttons.Button({ cssClass: 'e-primary' });
     modifyForm.appendTo('#modifyForm');
     // Generate an PDF Form when the button is clicked
     modifyForm.element.onclick = modifyFormFields;
 
     function modifyFormFields() {
         fetchAsUint8Array(
-            'https://cdn.syncfusion.com/content/pdf-resources/form-filling-document.pdf'
+            'https://cdn.syncfusion.com/content/pdf-resources/filled-form.pdf'
         )
             .then(function (pdfBytes) {
-                // Create a PDF document instance from the loaded PDF bytes
-                var pdf = new ej.pdf.PdfDocument(pdfBytes);
-                var form = pdf.form;
-                // Fill the Name text box field
-                var nameField = form.fieldAt(1);
-                if (nameField) {
-                    nameField.text = 'John Allister';
-                    nameField.setAppearance(true);
-                }
-                // Save the filled PDF document
+                // Load the PDF document
+                const pdf = new ej.pdf.PdfDocument(pdfBytes);
+                const form = pdf.form;
+                // -------------------------
+                // Date of Birth field
+                // -------------------------
+                const dobField = form.fieldAt(0);
+                dobField.text = '13/07/2002';
+                dobField.textAlignment = ej.pdf.PdfTextAlignment.left;
+                // Date format used for validation and formatting
+                const dateFormat = 'yyyy-mm-dd';
+                // Add JavaScript actions for date formatting and validation
+                dobField.actions.format = new ej.pdf.PdfJavaScriptAction(
+                    `AFDate_FormatEx("${dateFormat}");`
+                );
+                dobField.actions.keyPressed = new ej.pdf.PdfJavaScriptAction(
+                    `AFDate_KeystrokeEx("${dateFormat}");`
+                );
+                dobField.actions.validate = new ej.pdf.PdfJavaScriptAction(
+                    `AFDate_Validate("${dateFormat}");`
+                );
+                dobField.setAppearance(true);
+                // -------------------------
+                // Name field
+                // -------------------------
+                const nameField = form.fieldAt(1);
+                nameField.maxLength = 0;
+                nameField.required = false;
+                nameField.insertSpaces = false;
+                nameField.multiLine = false;
+                nameField.toolTip = "Text Box Tooltip";
+                nameField.borderColor = { r: 0, g: 0, b: 0 };
+                nameField.backColor = { r: 218, g: 234, b: 0 };
+                nameField.font = new ej.pdf.PdfStandardFont(ej.pdf.PdfFontFamily.helvetica, 10);
+                nameField.visibility = ej.pdf.PdfFormFieldVisibility.visible;
+                nameField.text = 'John Allister';
+                nameField.defaultValue = 'John Allister';
+                nameField.textAlignment = ej.pdf.PdfTextAlignment.center;
+                nameField.setAppearance(true);
+                // Save the updated PDF
                 pdf.save('ModifiedForm.pdf');
-                // Release PDF resources
+                // Release resources
                 pdf.destroy();
             })
             .catch(function (err) {

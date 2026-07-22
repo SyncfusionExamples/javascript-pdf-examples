@@ -1,0 +1,72 @@
+<head>
+    <!-- Syncfusion JavaScript PDF Library (CDN) -->
+    <script src="https://cdn.syncfusion.com/ej2/34.1.29/dist/ej2.min.js"></script>
+    <link href="https://cdn.syncfusion.com/ej2/34.1.29/ej2-buttons/styles/material.css" rel="stylesheet">
+</head>
+<div class="container py-4" style="margin: 5%;">
+    <h1 class="h4 mb-3">Create Stamp Annotations in PDF</h1>
+    <button id="stampBtn" class="btn btn-primary">Create Stamp Annotations</button>
+</div>
+
+<script>
+    // Create button
+    var stampBtn = new ej.buttons.Button(
+        { cssClass: 'e-primary' },
+        '#stampBtn'
+    );
+    // Attach click handler
+    stampBtn.element.onclick = createStampAnnotations;
+    // Create stamp annotation and download PDF
+    async function createStampAnnotations() {
+        // Read Base64 image data from image file
+        const base64 = await readFromUrl('https://cdn.syncfusion.com/content/pdf-resources/xamarin-jpeg.jpg');
+        // Create PDF document
+        const document = new ej.pdf.PdfDocument();
+        // Add page
+        const page = document.addPage();
+        // Create rubber stamp annotation
+        const annotation = new ej.pdf.PdfRubberStampAnnotation({
+            x: 50,
+            y: 100,
+            width: 150,
+            height: 125
+        });
+        // Create image from Base64 string
+        const image = new ej.pdf.PdfBitmap(base64);
+        // Draw image on stamp appearance
+        annotation.appearance.normal.graphics.drawImage(
+            image,
+            {
+                x: 0,
+                y: 0,
+                width: 150,
+                height: 125
+            }
+        );
+        // Add annotation to page
+        page.annotations.add(annotation);
+        // Save PDF
+        document.save('StampAnnotation.pdf');
+        // Dispose resources
+        document.destroy();
+    }
+
+    /**
+     * Read image file
+     * @param {string} url
+     * @returns {Promise<string>}
+     */
+    async function readFromUrl(url) {
+        const response = await fetch(url);
+        if (!response.ok) {
+            throw new Error(
+                `Failed to fetch ${url}: ${response.status} ${response.statusText}`
+            );
+        }
+        const buffer = await response.arrayBuffer();
+        return btoa(
+            new Uint8Array(buffer)
+                .reduce((data, byte) => data + String.fromCharCode(byte), '')
+        );
+    }
+</script>

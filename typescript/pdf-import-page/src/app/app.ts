@@ -1,7 +1,7 @@
 import { Button } from '@syncfusion/ej2-buttons';
 import { PdfDocument } from '@syncfusion/ej2-pdf';
 
-const importBtn = new Button();
+const importBtn = new Button({ cssClass: `e-primary`});
 importBtn.appendTo('#importBtn');
 importBtn.element.onclick = async (): Promise<void> => {
     try {

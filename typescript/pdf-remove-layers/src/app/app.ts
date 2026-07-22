@@ -1,7 +1,7 @@
 import { Button } from '@syncfusion/ej2-buttons';
 import { PdfDocument, PdfLayerCollection, PdfLayer } from '@syncfusion/ej2-pdf';
 
-const removeBtn = new Button();
+const removeBtn = new Button({ cssClass: `e-primary`});
 removeBtn.appendTo('#removeBtn');
 removeBtn.element.onclick = removeLayers;
 

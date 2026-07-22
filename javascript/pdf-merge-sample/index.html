@@ -1,6 +1,7 @@
 <head>
     <!-- Syncfusion JavaScript PDF Library (CDN) -->
-    <script src="https://cdn.syncfusion.com/ej2/33.2.12/dist/ej2.min.js"></script>
+    <script src="https://cdn.syncfusion.com/ej2/34.1.29/dist/ej2.min.js"></script>
+    <link href="https://cdn.syncfusion.com/ej2/34.1.29/ej2-buttons/styles/material.css" rel="stylesheet">
 </head>
 <div class="container py-4">
     <h1 class="h4 mb-3">Merge Multiple PDFs into One File</h1>
@@ -8,27 +9,35 @@
 </div>
 
 <script>
-    var mergeBtn = new ej.buttons.Button();
+    var mergeBtn = new ej.buttons.Button({ cssClass: 'e-primary' });
     mergeBtn.appendTo('#mergeBtn');
-        // Source PDF URL
+    // Source PDF URL
     var templateUrl1 = 'https://cdn.syncfusion.com/content/pdf-resources/pdf-succinctly.pdf';
     var templateUrl2 = 'https://cdn.syncfusion.com/content/pdf-resources/syncfusion-brochure.pdf';
+    var templateUrl3 = 'https://cdn.syncfusion.com/content/pdf-resources/credit_card_statement.pdf';
     // Click handler to merge PDFs
     mergeBtn.element.onclick = function () {
         // Fetch an source PDF file as bytes
         fetchAsUint8Array(templateUrl1).then(function (pdfBytes1) {
             // Fetch an another source PDF file as bytes
             fetchAsUint8Array(templateUrl2).then(function (pdfBytes2) {
-                // Create two PDF document instances from the same source
-                var doc1 = new ej.pdf.PdfDocument(pdfBytes1);
-                var doc2 = new ej.pdf.PdfDocument(pdfBytes2);
-                // Import all pages from doc2 into doc1
-                doc1.importPageRange(doc2, 0, doc2.pageCount - 1);
-                // Save merged PDF
-                doc1.save("MergedPDF.pdf");
-                // Cleanup
-                doc1.destroy();
-                doc2.destroy();
+                // Fetch an another source PDF file as bytes
+                fetchAsUint8Array(templateUrl3).then(function (pdfBytes3) {
+                    // Create two PDF document instances from the same source
+                    var doc1 = new ej.pdf.PdfDocument(pdfBytes1);
+                    var doc2 = new ej.pdf.PdfDocument(pdfBytes2);
+                    var doc3 = new ej.pdf.PdfDocument(pdfBytes3);
+                    // Import all pages from doc2 into doc1
+                    doc1.importPageRange(doc2, 0, doc2.pageCount - 1);
+                    // Import all pages from doc3 into doc1
+                    doc1.importPageRange(doc3, 0, doc3.pageCount - 1);
+                    // Save merged PDF
+                    doc1.save("MergedPDF.pdf");
+                    // Cleanup
+                    doc1.destroy();
+                    doc2.destroy();
+                    doc3.destroy();
+                })
             })
         }).catch(function (err) {
             // Error handling

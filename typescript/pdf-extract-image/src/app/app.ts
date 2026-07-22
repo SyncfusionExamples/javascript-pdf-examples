@@ -2,7 +2,7 @@ import { Button } from '@syncfusion/ej2-buttons';
 import { PdfDocument } from '@syncfusion/ej2-pdf';
 import { PdfDataExtractor } from '@syncfusion/ej2-pdf-data-extract';
 
-const extractBtn = new Button();
+const extractBtn = new Button({ cssClass: `e-primary`});
 extractBtn.appendTo('#extractbtn');
 
 extractBtn.element.onclick = async (): Promise<void> => {
