@@ -1,0 +1,86 @@
+<head>
+    <!-- Syncfusion JavaScript PDF Library (CDN) -->
+    <script src="https://cdn.syncfusion.com/ej2/34.1.29/dist/ej2.min.js"></script>
+    <link href="https://cdn.syncfusion.com/ej2/34.1.29/ej2-buttons/styles/material.css" rel="stylesheet">
+    <!-- Syncfusion components styles (CDN) -->
+    <link rel="stylesheet" href="https://cdn.syncfusion.com/ej2/33.2.12/material.css">
+</head>
+<div class="container py-4" style="margin: 5%;">
+    <h1 class="h4 mb-3">Export Forms Data</h1>
+    <button id="importForm" class="btn btn-primary" style="margin: 1%;">Import Form Data</button>
+    <button id="exportForm" class="btn btn-primary" style="margin: 1%;">Export Form Data</button>
+</div>
+<script>
+    // Create the Import Form Data button
+    var importForm = new ej.buttons.Button({ cssClass: 'e-primary' });
+    importForm.appendTo('#importForm');
+    // Import form data when the button is clicked
+    importForm.element.onclick = importFormFields;
+    // Import JSON data into a PDF form
+    function importFormFields() {
+        Promise.all([
+            fetchAsUint8Array(
+                'https://cdn.syncfusion.com/content/pdf-resources/form-filling-document.pdf'
+            ),
+            fetchAsUint8Array(
+                'https://cdn.syncfusion.com/content/pdf-resources/ExportedFormData.json'
+            )
+        ])
+            .then(function ([pdfBytes, formData]) {
+                // Load the PDF document
+                const document = new ej.pdf.PdfDocument(pdfBytes);
+                // Import the form data
+                document.importFormData(formData, ej.pdf.DataFormat.json);
+                // Save the updated PDF document
+                document.save('ImportedForm.pdf');
+                // Dispose the document
+                document.destroy();
+            })
+            .catch(function (err) {
+                console.error('Import error:', err);
+                alert('Error: ' + err.message);
+            });
+    }
+    // Create the Export Form Data button
+    var exportForm = new ej.buttons.Button({ cssClass: 'e-primary' });
+    exportForm.appendTo('#exportForm');
+    // Export form data when the button is clicked
+    exportForm.element.onclick = exportFormFields;
+    // Export PDF form data to a JSON file
+    function exportFormFields() {
+        fetchAsUint8Array(
+            'https://cdn.syncfusion.com/content/pdf-resources/filled-form.pdf'
+        )
+            .then(function (pdfBytes) {
+                // Load the PDF document
+                const document = new ej.pdf.PdfDocument(pdfBytes);
+                // Create export settings
+                var settings = new ej.pdf.PdfFormFieldExportSettings();
+                settings.dataFormat = ej.pdf.DataFormat.json;
+                // Export the form data
+                document.exportFormData('ExportedFormData.json', settings);
+                // Dispose the document
+                document.destroy();
+            })
+            .catch(function (err) {
+                console.error(err);
+                alert('Failed to create fillable form PDF');
+            });
+    }
+    // Fetch a file as a Uint8Array
+    function fetchAsUint8Array(url) {
+        return fetch(url, { cache: 'no-cache' })
+            .then(function (res) {
+                if (!res.ok) {
+                    throw new Error(
+                        'Failed to fetch ' + url + ': ' +
+                        res.status + ' ' + res.statusText
+                    );
+                }
+                return res.arrayBuffer();
+            })
+            .then(function (buf) {
+                return new Uint8Array(buf);
+            });
+    }
+</script>

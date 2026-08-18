@@ -1,0 +1,52 @@
+<head>
+    <!-- Syncfusion JavaScript PDF Library (CDN) -->
+    <script src="https://cdn.syncfusion.com/ej2/34.1.29/dist/ej2.min.js"></script>
+    <link href="https://cdn.syncfusion.com/ej2/34.1.29/ej2-buttons/styles/material.css" rel="stylesheet">
+</head>
+<div class="container py-4" style="margin: 5%;">
+    <h1 class="h4 mb-3">Import Annotations to PDF</h1>
+    <button id="importBtn" class="btn btn-primary">Import Annotations</button>
+</div>
+<script>
+    // Create the Import Annotations button
+    var importBtn = new ej.buttons.Button({ cssClass: 'e-primary' }, '#importBtn');
+    // Import annotations when the button is clicked
+    importBtn.element.onclick = importAnnotations;
+    // Import annotations into a PDF document
+    function importAnnotations() {
+        Promise.all([
+            fetchAsUint8Array(
+                'https://cdn.syncfusion.com/content/pdf-resources/ImportAnnotations.pdf'
+            ),
+            fetchAsUint8Array(
+                'https://cdn.syncfusion.com/content/pdf-resources/ImportAnnotations.json'
+            )
+        ])
+            .then(function ([pdfBytes, jsonData]) {
+                // Load the PDF document
+                let document = new ej.pdf.PdfDocument(pdfBytes);
+                // Import annotations from the JSON file
+                document.importAnnotations(jsonData, ej.pdf.DataFormat.json);
+                // Save the updated PDF document
+                document.save('ImportAnnotation.pdf');
+                // Dispose the document
+                document.destroy();
+            });
+    }
+    // Fetch a file as a Uint8Array
+    function fetchAsUint8Array(url) {
+        return fetch(url, { cache: 'no-cache' })
+            .then(function (res) {
+                if (!res.ok) {
+                    throw new Error(
+                        'Failed to fetch ' + url + ': ' +
+                        res.status + ' ' + res.statusText
+                    );
+                }
+                return res.arrayBuffer();
+            })
+            .then(function (buf) {
+                return new Uint8Array(buf);
+            });
+    }
+</script>
