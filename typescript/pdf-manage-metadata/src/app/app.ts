@@ -37,7 +37,7 @@ function addMetaData() {
 // Modify metadata in an existing PDF document
 function modifyMetaData() {
     fetchAsUint8Array(
-        'https://cdn.syncfusion.com/content/pdf-resources/AddedMetaData.pdf'
+        'https://document.syncfusion.com/content/pdf-resources/AddedMetaData.pdf'
     ).then(function (pdfBytes) {
         // Load the PDF document
         let document: PdfDocument = new PdfDocument(pdfBytes);

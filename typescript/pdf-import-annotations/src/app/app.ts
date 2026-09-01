@@ -10,8 +10,8 @@ importBtn.element.onclick = importAnnotations;
 // Import annotations into a PDF document
 function importAnnotations() {
     Promise.all([
-        fetchAsUint8Array('https://cdn.syncfusion.com/content/pdf-resources/ImportAnnotations.pdf'),
-        fetchAsUint8Array('https://cdn.syncfusion.com/content/pdf-resources/ImportAnnotations.json')
+        fetchAsUint8Array('https://document.syncfusion.com/content/pdf-resources/ImportAnnotations.pdf'),
+        fetchAsUint8Array('https://document.syncfusion.com/content/pdf-resources/ImportAnnotations.json')
     ])
         .then(function ([pdfBytes, jsonData]) {
             // Load the PDF document

@@ -41,7 +41,7 @@
     editBtn.element.onclick = modifyMetaData;
     // Modify metadata in an existing PDF document
     function modifyMetaData() {
-        fetchAsUint8Array('https://cdn.syncfusion.com/content/pdf-resources/AddedMetaData.pdf')
+        fetchAsUint8Array('https://document.syncfusion.com/content/pdf-resources/AddedMetaData.pdf')
             .then(function (pdfBytes) {
                 // Load the existing PDF document
                 var document = new ej.pdf.PdfDocument(pdfBytes);

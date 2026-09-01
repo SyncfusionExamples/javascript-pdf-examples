@@ -39,7 +39,7 @@ function importFormFields() {
 // Export PDF form data to a JSON file
 function exportFormFields() {
     fetchAsUint8Array(
-        'https://cdn.syncfusion.com/content/pdf-resources/filled-form.pdf'
+        'https://document.syncfusion.com/content/pdf-resources/filled-form.pdf'
     )
         .then(function (pdfBytes) {
             // Load the PDF document
