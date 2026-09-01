@@ -1,0 +1,175 @@
+<head>
+    <!-- Syncfusion JavaScript PDF Library (CDN) -->
+    <script src="https://cdn.syncfusion.com/ej2/34.1.29/dist/ej2.min.js"></script>
+    <link href="https://cdn.syncfusion.com/ej2/34.1.29/ej2-buttons/styles/material.css" rel="stylesheet">
+    <!-- Syncfusion components styles (CDN) -->
+    <link rel="stylesheet" href="https://cdn.syncfusion.com/ej2/33.2.12/material.css">
+</head>
+<div class="container py-4" style="margin: 5%;">
+    <h1 class="h4 mb-3">Add Form fields to Existing PDF</h1>
+    <button id="addForm" class="btn btn-primary" style="margin: 1%;">Generate PDF</button>
+</div>
+<script>
+    // Create and initialize the PDF creation button
+    var addForm = new ej.buttons.Button({ cssClass: 'e-primary' });
+    addForm.appendTo('#addForm');
+    addForm.element.onclick = addFormFields;
+    // Template PDF URL
+    var templateURL = 'https://cdn.syncfusion.com/content/pdf-resources/pdf-succinctly.pdf';
+    function addFormFields() {
+        // Fetch PDF bytes using Promise
+        readFromPdfResources(templateURL)
+            .then(function (pdfBytes) {
+                // Create PDF document and page
+                const document = new ej.pdf.PdfDocument(pdfBytes);
+                const page = document.addPage()
+                const graphics = page.graphics;
+                // Fonts
+                const font = document.embedFont(
+                    ej.pdf.PdfFontFamily.helvetica,
+                    20,
+                    ej.pdf.PdfFontStyle.regular
+                );
+                const radioFont = document.embedFont(
+                    ej.pdf.PdfFontFamily.helvetica,
+                    13,
+                    ej.pdf.PdfFontStyle.regular
+                );
+                const comboFont = document.embedFont(
+                    ej.pdf.PdfFontFamily.helvetica,
+                    10,
+                    ej.pdf.PdfFontStyle.regular
+                );
+                // Common styles
+                const black = { r: 0, g: 0, b: 0 };
+                const white = { r: 255, g: 255, b: 255 };
+                const brush = new ej.pdf.PdfBrush(black);
+                const solidBorder = new ej.pdf.PdfInteractiveBorder({
+                    width: 1,
+                    style: ej.pdf.PdfBorderStyle.solid
+                });
+                // Name field
+                graphics.drawString('Name:', font, { x: 10, y: 58, width: 300, height: 400 }, brush);
+                const nameField = new ej.pdf.PdfTextBoxField(page, 'Name', {
+                    x: 100,
+                    y: 60,
+                    width: 200,
+                    height: 22
+                });
+                document.form.add(nameField);
+                // Gender field
+                graphics.drawString('Gender:', font, { x: 10, y: 98, width: 300, height: 400 }, brush);
+                graphics.drawString('Male', radioFont, { x: 100, y: 105, width: 300, height: 400 }, brush);
+                graphics.drawString('Female', radioFont, { x: 150, y: 105, width: 300, height: 400 }, brush);
+                graphics.drawString('Other', radioFont, { x: 220, y: 105, width: 300, height: 400 }, brush);
+                const genderField = new ej.pdf.PdfRadioButtonListField(page, 'Gender', {
+                    items: [
+                        { name: 'Male', bounds: { x: 130, y: 108, width: 14, height: 10 } },
+                        { name: 'Female', bounds: { x: 195, y: 108, width: 14, height: 10 } },
+                        { name: 'Other', bounds: { x: 255, y: 108, width: 14, height: 10 } }
+                    ],
+                    selectedIndex: 1
+                });
+                document.form.add(genderField);
+                // Mail field
+                graphics.drawString('Mail:', font, { x: 10, y: 138, width: 300, height: 400 }, brush);
+                const mailField = new ej.pdf.PdfTextBoxField(page, 'Name', {
+                    x: 100,
+                    y: 140,
+                    width: 200,
+                    height: 22
+                });
+                document.form.add(mailField);
+                // State dropdown
+                graphics.drawString('State:', font, { x: 10, y: 178, width: 300, height: 400 }, brush);
+                const stateField = new ej.pdf.PdfComboBoxField(
+                    page,
+                    'State',
+                    { x: 100, y: 180, width: 200, height: 22 },
+                    {
+                        items: [
+                            { text: 'California', value: 'CA' },
+                            { text: 'Washington D.C', value: 'DC' },
+                            { text: 'London', value: 'LN' }
+                        ],
+                        color: black,
+                        backColor: white,
+                        borderColor: black,
+                        border: solidBorder,
+                        selectedIndex: 0,
+                        font: comboFont
+                    }
+                );
+                document.form.add(stateField);
+                // Date of birth field
+                graphics.drawString('DOB:', font, { x: 10, y: 218, width: 300, height: 400 }, brush);
+                const dateField = new ej.pdf.PdfTextBoxField(page, 'DateField', {
+                    x: 100,
+                    y: 220,
+                    width: 200,
+                    height: 22
+                });
+                // Default date value
+                dateField.text = '18/08/2003';
+                // Date format validation
+                const format = 'yyyy-mm-dd';
+                dateField.actions.format =
+                    new ej.pdf.PdfJavaScriptAction(`AFDate_FormatEx("${format}");`);
+                dateField.actions.keyPressed =
+                    new ej.pdf.PdfJavaScriptAction(`AFDate_KeystrokeEx("${format}"):`);
+                dateField.actions.validate =
+                    new ej.pdf.PdfJavaScriptAction(`AFDate_Validate("${format}");`);
+                document.form.add(dateField);
+                // Terms and conditions checkbox
+                graphics.drawString('T&C', font, { x: 10, y: 258, width: 300, height: 400 }, brush);
+                const checkboxField = new ej.pdf.PdfCheckBoxField(
+                    'AcceptTerms',
+                    { x: 100, y: 262, width: 14, height: 14 },
+                    page,
+                    {
+                        toolTip: 'Accept the terms and conditions',
+                        backColor: white,
+                        borderColor: black,
+                        border: solidBorder,
+                        checked: true
+                    }
+                );
+                document.form.add(checkboxField);
+                // Submit button
+                const buttonField = new ej.pdf.PdfButtonField(
+                    page,
+                    'Submit',
+                    { x: 10, y: 300, width: 120, height: 28 },
+                    {
+                        toolTip: 'Submit form',
+                        color: white,
+                        backColor: { r: 0, g: 122, b: 204 },
+                        borderColor: black,
+                        border: solidBorder,
+                        text: 'Submit',
+                        highlightMode: ej.pdf.PdfHighlightMode.push
+                    }
+                );
+                // Generate button appearance
+                buttonField.setAppearance(true);
+                document.form.add(buttonField);
+                // Save PDF
+                document.save('FormCreation.pdf');
+                // Release resources
+                document.destroy();
+            });
+    }
+    //   Fetch PDF from URL and return Uint8Array
+    function readFromPdfResources(url) {
+        return fetch(url)
+            .then(function (res) {
+                if (!res.ok) {
+                    throw new Error('Failed to fetch PDF: ' + res.status + ' ' + res.statusText);
+                }
+                return res.arrayBuffer();
+            })
+            .then(function (buf) {
+                return new Uint8Array(buf);
+            });
+    }
+</script>

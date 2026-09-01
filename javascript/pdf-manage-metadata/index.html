@@ -1,0 +1,77 @@
+<head>
+    <!-- Syncfusion JavaScript PDF Library (CDN) -->
+    <script src="https://cdn.syncfusion.com/ej2/34.1.29/dist/ej2.min.js"></script>
+    <link href="https://cdn.syncfusion.com/ej2/34.1.29/ej2-buttons/styles/material.css" rel="stylesheet">
+    <!-- Syncfusion components styles (CDN) -->
+    <link rel="stylesheet" href="https://cdn.syncfusion.com/ej2/33.2.12/material.css">
+</head>
+<div class="container py-4" style="margin: 5%;">
+    <h1 class="h4 mb-3">Manage Meta Data</h1>
+    <button id="addBtn" class="btn btn-primary" style="margin: 1%;">Add Meta Data</button>
+    <button id="editBtn" class="btn btn-primary" style="margin: 1%;">Edit Meta Data</button>
+</div>
+<script>
+    // Create the Add Metadata button
+    var addBtn = new ej.buttons.Button({ cssClass: 'e-primary' });
+    addBtn.appendTo('#addBtn');
+    addBtn.element.onclick = addMetaData;
+    // Add metadata to a new PDF document
+    function addMetaData() {
+        // Create a PDF document
+        var document = new ej.pdf.PdfDocument();
+        // Get the document information
+        var documentProperties = document.getDocumentInformation(false);
+        // Access the XMP metadata
+        var xmpMetadata = documentProperties.xmpMetadata;
+        // Set basic metadata
+        xmpMetadata.basicSchema.creatorTool = 'My App';
+        xmpMetadata.basicSchema.createDate = new Date();
+        xmpMetadata.basicSchema.modifyDate = new Date();
+        // Set Dublin Core metadata
+        xmpMetadata.dublinCoreSchema.title = { 'en-US': 'Sample PDF' };
+        xmpMetadata.dublinCoreSchema.creator = ['Syncfusion'];
+        // Save the document
+        document.save('AddedMetaData.pdf');
+        // Dispose the document
+        document.destroy();
+    }
+    // Create the Edit Metadata button
+    var editBtn = new ej.buttons.Button({ cssClass: 'e-primary' });
+    editBtn.appendTo('#editBtn');
+    editBtn.element.onclick = modifyMetaData;
+    // Modify metadata in an existing PDF document
+    function modifyMetaData() {
+        fetchAsUint8Array('https://document.syncfusion.com/content/pdf-resources/AddedMetaData.pdf')
+            .then(function (pdfBytes) {
+                // Load the existing PDF document
+                var document = new ej.pdf.PdfDocument(pdfBytes);
+                // Get the document information
+                var documentProperties = document.getDocumentInformation(false);
+                // Access the XMP metadata
+                var xmpMetadata = documentProperties.xmpMetadata;
+                // Update the metadata values
+                xmpMetadata.basicSchema.creatorTool = 'Updated Tool';
+                xmpMetadata.dublinCoreSchema.title = { 'en-US': 'Updated Title' };
+                // Save the updated document
+                document.save('ModifiedMetaData.pdf');
+                // Dispose the document
+                document.destroy();
+            });
+    }
+    // Fetch a PDF file as a Uint8Array
+    function fetchAsUint8Array(url) {
+        return fetch(url, { cache: 'no-cache' })
+            .then(function (res) {
+                if (!res.ok) {
+                    throw new Error(
+                        'Failed to fetch ' + url + ': ' +
+                        res.status + ' ' + res.statusText
+                    );
+                }
+                return res.arrayBuffer();
+            })
+            .then(function (buf) {
+                return new Uint8Array(buf);
+            });
+    }
+</script>
