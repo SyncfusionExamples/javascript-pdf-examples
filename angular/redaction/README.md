@@ -1,59 +1,114 @@
-# Redaction
+# How to Redact Content in a PDF Document Using the JavaScript PDF Library 
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 22.1.6.
+This sample demonstrates how to redact content in a PDF document using the `Syncfusion JavaScript PDF Library`.
 
-## Development server
+## Features Demonstrated
 
-To start a local development server, run:
+This sample shows how to:
+
+- Load an existing PDF document from a URL.
+- Redact content from a specified region in a PDF document.
+- Apply a custom fill color to the redacted area.
+- Customize the text displayed in the redacted region.
+- Save and download the redacted PDF document.
+- Release resources after processing the PDF document.
+
+## Project Structure
+
+### app.ts
+
+The `redactContent()` method performs the following operations:
+
+- Loads the input PDF document.
+- Creates a redaction region on the specified page.
+- Adds the redaction region to the PDF redactor.
+- Applies the redaction to permanently remove the content.
+- Saves the redacted PDF document.
+- Releases resources after processing.
+
+The `applyRedactionFillColor()` method performs the following operations:
+
+- Loads the input PDF document.
+- Creates a redaction region.
+- Applies a custom fill color to the redacted area.
+- Processes the redaction.
+- Saves the modified PDF document.
+- Releases resources after processing.
+
+The `customizeTextAppearance()` method performs the following operations:
+
+- Loads the input PDF document.
+- Creates a redaction region with appearance customization enabled.
+- Adds custom text within the redacted area.
+- Applies the redaction.
+- Saves the resulting PDF document.
+- Releases resources after processing.
+
+The `getInputBytes()` helper method performs the following operations:
+ 
+- Downloads the PDF document from the specified URL.
+- Converts the document content to a `Uint8Array`.
+- Returns the PDF data for further processing.
+
+### app.html
+
+The user interface includes:
+
+- A **Redact Content** button.
+- An **Apply Fill Color** button.
+- A **Customize Text Appearance** button.
+- A simple layout to trigger the redaction operations.
+
+When a button is clicked, the application performs the selected redaction operation and downloads the resulting PDF document.
+
+## Prerequisites
+
+Ensure the following software is installed:
+
+- Node.js
+- Angular CLI
+
+## Installation
+
+Install the Syncfusion packages:
+ 
+```bash
+npm install @syncfusion/ej2-pdf
+npm install @syncfusionej2-pdf-data-extract
+```
+
+## Running the Application
+
+Install the project dependencies:
+
+```bash
+npm install
+```
+
+Start the Angular development server:
 
 ```bash
 ng serve
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+Then open:
 
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
+```text
+http://localhost:4200/
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
-
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+Use one of the available buttons to perform the desired redaction operation. The resulting PDF document will be downloaded automatically.
 
 ## Additional Resources
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+### Documentation
+
+[JavaScript PDF Library Documentation](https://help.syncfusion.com/document-processing/pdf/pdf-library/javascript/redaction)
+
+### Online Demos
+
+[JavaScript PDF Library Demos](https://document.syncfusion.com/demos/pdf/angular/#/tailwind3/pdf/redaction)
+
+### Product Page
+
+[JavaScript PDF Library Product Page](https://www.syncfusion.com/document-sdk/javascript-pdf-library)
