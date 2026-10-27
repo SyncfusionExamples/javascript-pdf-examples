@@ -15,7 +15,7 @@ A .NET MAUI Blazor Hybrid app that creates an Arabic, right-to-left PDF with the
 4. The PDF bytes are returned to Blazor as a base64 string through JS interop (`generateArabicPdf`).
 5. `Services/PdfService.cs` decodes them, saves `ArabicSample.pdf` in `FileSystem.Current.AppDataDirectory`, and opens it
    with an `ACTION_VIEW` intent through a `FileProvider` (falls back to the share sheet if no viewer is installed).
-6. `Components/Pages/PdfGenerator.razor` provides the UI: editable Arabic text, **Generate PDF**, **Open**, **Share**.
+6. `Components/Pages/PdfGenerator.razor` provides the UI: editable Arabic text and a **Generate PDF** button (which saves the PDF and opens it in the Android viewer).
 
 ## Project layout
 

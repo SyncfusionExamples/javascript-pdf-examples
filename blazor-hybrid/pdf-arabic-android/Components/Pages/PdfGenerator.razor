@@ -8,8 +8,6 @@
 
 <div>
     <button @onclick="GenerateAsync" disabled="@_busy">@(_busy ? "Generating..." : "Generate PDF")</button>
-    <button @onclick="OpenAsync" disabled="@(_busy || _path is null)">Open</button>
-    <button @onclick="ShareAsync" disabled="@(_busy || _path is null)">Share</button>
 </div>
 
 @if (_path is not null)
@@ -37,10 +35,6 @@
         _path = await Pdf.GenerateAndSaveAsync(JS, _text);
         await Pdf.OpenAsync(_path);
     });
-
-    private Task OpenAsync() => RunAsync(() => Pdf.OpenAsync(_path!));
-
-    private Task ShareAsync() => RunAsync(() => Pdf.ShareAsync(_path!));
 
     private async Task RunAsync(Func<Task> action)
     {
