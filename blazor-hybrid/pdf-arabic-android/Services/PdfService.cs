@@ -35,10 +35,17 @@ public class PdfService
         string? base64 = null;
         if (!_pdfSent)
         {
-            await using var stream = await FileSystem.OpenAppPackageFileAsync("wwwroot/pdf/ArabicText.pdf");
-            using var ms = new MemoryStream();
-            await stream.CopyToAsync(ms);
-            base64 = Convert.ToBase64String(ms.ToArray());
+            try
+            {
+                await using var stream = await FileSystem.OpenAppPackageFileAsync("ArabicText.pdf");
+                using var ms = new MemoryStream();
+                await stream.CopyToAsync(ms);
+                base64 = Convert.ToBase64String(ms.ToArray());
+            }
+            catch (Exception ex)
+            {
+                return $"Error: could not read ArabicText.pdf from the app package: {ex.Message}";
+            }
         }
 
         var result = await module.InvokeAsync<string>("extractTextFromPdf", base64);

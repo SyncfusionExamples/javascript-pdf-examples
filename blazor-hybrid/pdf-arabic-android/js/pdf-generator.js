@@ -13,10 +13,6 @@ import { PdfDataExtractor } from '@syncfusion/ej2-pdf-data-extract';
 const arabicFontUrl =
     'https://cdn.syncfusion.com/content/pdf-resources/noto-naskh-arabic-regular.ttf';
 
-// Embedded in wwwroot/pdf. Blazor reads it from the app package and passes it in as base64.
-// This relative URL is only a fallback when no bytes are supplied.
-const pdfUrl = 'pdf/ArabicText.pdf';
-
 const defaultArabicText =
 `سنبدأ بنظرة عامة مفاهيمية على مستند PDF بسيط. تم تصميم هذا الفصل ليكون توجيهًا مختصرًا قبل الغوص في مستند حقيقي وإنشاءه من البداية.
 يمكن تقسيم ملف PDF إلى أربعة أجزاء: الرأس والجسم والجدول الإسناد الترافقي والمقطورة. يضع الرأس الملف كملف PDF ، حيث يحدد النص المستند المرئي ، ويسرد جدول الإسناد الترافقي موقع كل شيء في الملف ، ويوفر المقطع الدعائي تعليمات حول كيفية بدء قراءة الملف.
@@ -88,9 +84,10 @@ export function getDefaultArabicText() {
 export async function extractTextFromPdf(pdfBase64) {
     try {
         if (!cachedPdfBytes) {
-            cachedPdfBytes = pdfBase64
-                ? Uint8Array.from(atob(pdfBase64), c => c.charCodeAt(0))
-                : await fetchAsUint8Array(pdfUrl);
+            if (!pdfBase64) {
+                throw new Error('No PDF data was supplied.');
+            }
+            cachedPdfBytes = Uint8Array.from(atob(pdfBase64), c => c.charCodeAt(0));
         }
 
         const pdfDocument = new PdfDocument(cachedPdfBytes);
