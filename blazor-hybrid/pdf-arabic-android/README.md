@@ -43,7 +43,7 @@ npm run build:js          # bundles @syncfusion/ej2-pdf into wwwroot/js/pdf-gene
 dotnet build -t:Run -f net9.0-android
 ```
 
-The csproj also runs the npm steps automatically if the bundle is missing. Re-run `npm run build:js` after editing
+The csproj re-bundles automatically when `js/pdf-generator.js` or `package.json` is newer than the bundle. If you see stale behaviour (for example a 404 for a path that no longer exists in the code), run `npm run build:js` and do a clean rebuild (delete `bin`/`obj`, and uninstall the app from the emulator). Re-run `npm run build:js` after editing
 `js/pdf-generator.js`.
 
 ## Notes

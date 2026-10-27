@@ -30,9 +30,10 @@
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="9.0.0" />
   </ItemGroup>
 
-  <!-- Bundle @syncfusion/ej2-pdf into wwwroot/js/pdf-generator.js before building -->
-  <Target Name="BundleJs" BeforeTargets="BeforeBuild" Condition="!Exists('wwwroot/js/pdf-generator.js')">
-    <Exec Command="npm install" />
+  <!-- Re-bundle @syncfusion/ej2-pdf into wwwroot/js/pdf-generator.js whenever the source or package.json changes
+       (an old bundle would otherwise keep running stale code). -->
+  <Target Name="BundleJs" BeforeTargets="BeforeBuild" Inputs="js\pdf-generator.js;package.json" Outputs="wwwroot\js\pdf-generator.js">
+    <Exec Command="npm install" Condition="!Exists('node_modules')" />
     <Exec Command="npm run build:js" />
   </Target>
 
