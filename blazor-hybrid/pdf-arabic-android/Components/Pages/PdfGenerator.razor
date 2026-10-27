@@ -55,7 +55,7 @@
         _busy = true;
         _error = null;
         try { await action(); }
-        catch (Exception ex) { _error = ex.Message }
+        catch (Exception ex) { _error = ex.Message; }
         finally { _busy = false; }
     }
 }

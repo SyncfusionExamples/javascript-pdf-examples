@@ -13,8 +13,8 @@ import { PdfDataExtractor } from '@syncfusion/ej2-pdf-data-extract';
 const arabicFontUrl =
     'https://cdn.syncfusion.com/content/pdf-resources/noto-naskh-arabic-regular.ttf';
 
-const pdfUrl =
-    'https://document.syncfusion.com/content/pdf-resources/ArabicText.pdf';
+// Embedded in wwwroot/pdf and served from the app package (relative to the WebView base href)
+const pdfUrl = 'pdf/ArabicText.pdf';
 
 const defaultArabicText =
 `سنبدأ بنظرة عامة مفاهيمية على مستند PDF بسيط. تم تصميم هذا الفصل ليكون توجيهًا مختصرًا قبل الغوص في مستند حقيقي وإنشاءه من البداية.
