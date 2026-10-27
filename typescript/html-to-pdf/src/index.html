@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Convert HTML or Canvas content into an image and add the image to a PDF document.">
+    <title>HTML or Canvas to PDF</title>
+</head>
+<body>
+    <main class="application-container">
+        <header class="application-header">
+            <h1>HTML or Canvas to PDF</h1>
+            <p>
+                Select a template, preview the content, and generate a
+                PDF document containing the preview as an image.
+            </p>
+        </header>
+        <section class="control-container" aria-label="PDF creation controls">
+            <div class="field-container">
+                <label for="templateSelect">
+                    Select a template
+                </label>
+                <input id="templateSelect" type="text" aria-label="Select a template">
+            </div>
+            <div class="button-container">
+                <button id="createButton" type="button" disabled>
+                    Create PDF
+                </button>
+                <button id="clearButton" type="button" class="clear-button">
+                    Clear
+                </button>
+            </div>
+        </section>
+        <section class="preview-card" aria-labelledby="previewHeading">
+            <div class="preview-header">
+                <div>
+                    <h2 id="previewHeading">
+                        Content Preview
+                    </h2>
+                    <p>
+                        The following content will be converted into an
+                        image and inserted into a PDF document.
+                    </p>
+                </div>
+                <span id="previewType" class="preview-type">
+                    No template
+                </span>
+            </div>
+            <div class="preview-background">
+                <div id="previewContainer" class="preview-container">
+                    <div class="empty-preview">
+                        Select a template to display the preview.
+                    </div>
+                </div>
+            </div>
+        </section>
+        <p id="statusMessage" class="status-message" role="status" aria-live="polite"></p>
+    </main>
+</body>
+</html>

@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Convert HTML or Canvas content into an image and add the image to a PDF document.">
+    <title>HTML or Canvas to PDF</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.syncfusion.com/ej2/33.2.12/dist/ej2.min.js"></script>
+</head>
+<body>
+    <main class="application-container">
+        <header class="application-header">
+            <h1>HTML or Canvas to PDF</h1>
+            <p>
+                Select a template, preview the content, and generate a
+                PDF document containing the preview as an image.
+            </p>
+        </header>
+        <section class="control-container">
+            <div class="field-container">
+                <label for="templateSelect">
+                    Select a template
+                </label>
+                <input id="templateSelect" type="text">
+            </div>
+            <div class="button-container">
+                <button id="createButton" type="button" disabled>
+                    Create PDF
+                </button>
+                <button id="clearButton" type="button">
+                    Clear
+                </button>
+            </div>
+        </section>
+        <section class="preview-card">
+            <div class="preview-header">
+                <div>
+                    <h2>Content Preview</h2>
+                    <p>
+                        The following content will be converted into an
+                        image and inserted into a PDF document.
+                    </p>
+                </div>
+                <span id="previewType" class="preview-type">
+                    No template
+                </span>
+            </div>
+            <div class="preview-background">
+                <div id="previewContainer" class="preview-container">
+                    <div class="empty-preview">
+                        Select a template to display the preview.
+                    </div>
+                </div>
+            </div>
+        </section>
+        <p id="statusMessage" class="status-message"></p>
+    </main>
+</body>
+<script>
+    const htmlCapturePixelRatio = 2;
+    const templates = {
+        certificate: {
+            name: 'Certificate',
+            type: 'html',
+            html: `
+            <div class="certificate-template">
+                <div class="certificate-inner">
+                    <div class="certificate-icon">★</div>
+                    <p class="certificate-label">
+                        Certificate of Achievement
+                    </p>
+                    <h2>Certificate of Excellence</h2>
+                    <p class="certificate-presented">
+                        This certificate is proudly presented to
+                    </p>
+                    <p class="certificate-recipient">
+                        John Doe
+                    </p>
+                    <div class="certificate-divider"></div>
+                    <p class="certificate-description">
+                        For successfully completing the program and
+                        demonstrating outstanding performance.
+                    </p>
+                </div>
+            </div>
+        `
+        },
+        invoice: {
+            name: 'Invoice',
+            type: 'html',
+            html: `
+            <div class="invoice-template">
+                <div class="invoice-header">
+                    <div class="invoice-company">
+                        <div class="company-logo">
+                            C
+                        </div>
+                        <div>
+                            <h2>Contoso Limited</h2>
+                            <p>
+                                Software solutions and services
+                            </p>
+                        </div>
+                    </div>
+                    <div class="invoice-title">
+                        <h2>INVOICE</h2>
+                        <p>#INV-2026-001</p>
+                    </div>
+                </div>
+                <div class="invoice-information">
+                    <div>
+                        <span>Billed to</span>
+                        <strong>Adventure Works</strong>
+                        <p>123 Business Street</p>
+                        <p>Chennai, Tamil Nadu</p>
+                    </div>
+                    <div>
+                        <span>Invoice date</span>
+                        <strong>September 1, 2026</strong>
+                        <span class="due-date-label">
+                            Due date
+                        </span>
+                        <strong>September 15, 2026</strong>
+                    </div>
+                </div>
+                <table class="invoice-table">
+                    <thead>
+                        <tr>
+                            <th>Description</th>
+                            <th>Quantity</th>
+                            <th>Rate</th>
+                            <th>Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Software license</td>
+                            <td>1</td>
+                            <td>$500.00</td>
+                            <td>$500.00</td>
+                        </tr>
+                        <tr>
+                            <td>Technical support</td>
+                            <td>2</td>
+                            <td>$100.00</td>
+                            <td>$200.00</td>
+                        </tr>
+                        <tr>
+                            <td>Implementation service</td>
+                            <td>1</td>
+                            <td>$300.00</td>
+                            <td>$300.00</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="invoice-total-container">
+                    <div>
+                        <span>Subtotal</span>
+                        <strong>$1,000.00</strong>
+                    </div>
+                    <div>
+                        <span>Tax</span>
+                        <strong>$180.00</strong>
+                    </div>
+                    <div class="invoice-grand-total">
+                        <span>Total</span>
+                        <strong>$1,180.00</strong>
+                    </div>
+                </div>
+                <p class="invoice-note">
+                    Thank you for your business.
+                </p>
+            </div>
+        `
+        },
+        greeting: {
+            name: 'Greeting Card',
+            type: 'html',
+            html: `
+            <div class="greeting-template">
+                <div class="greeting-circle circle-one"></div>
+                <div class="greeting-circle circle-two"></div>
+                <div class="greeting-circle circle-three"></div>
+                <div class="greeting-content">
+                    <div class="greeting-icon">
+                        ✓
+                    </div>
+                    <p class="greeting-label">
+                        Great achievement
+                    </p>
+                    <h2>Congratulations!</h2>
+                    <p class="greeting-description">
+                        Wishing you continued success and happiness
+                        on your wonderful achievement.
+                    </p>
+                    <p class="greeting-footer">
+                        Best wishes from your team
+                    </p>
+                </div>
+            </div>
+        `
+        },
+        canvas: {
+            name: 'Canvas Drawing',
+            type: 'canvas'
+        }
+    };
+    let templateDropdown;
+    let createButtonComponent;
+    let clearButtonComponent;
+    let previewContainer;
+    let previewType;
+    let statusMessage;
+    document.addEventListener('DOMContentLoaded', initializeSample);
+    function initializeSample() {
+        previewContainer = getElement('previewContainer');
+        previewType = getElement('previewType');
+        statusMessage = getElement('statusMessage');
+        initializeTemplateDropdown();
+        initializeButtons();
+    }
+    function initializeTemplateDropdown() {
+        const templateSelectInput = getElement('templateSelect');
+        templateDropdown = new ej.dropdowns.DropDownList({
+            dataSource: [
+                {
+                    text: 'Select a template',
+                    value: ''
+                },
+                {
+                    text: 'Certificate',
+                    value: 'certificate'
+                },
+                {
+                    text: 'Invoice',
+                    value: 'invoice'
+                },
+                {
+                    text: 'Greeting Card',
+                    value: 'greeting'
+                },
+                {
+                    text: 'Canvas Drawing',
+                    value: 'canvas'
+                }
+            ],
+            fields: {
+                text: 'text',
+                value: 'value'
+            },
+            value: '',
+            change: onTemplateChange
+        });
+        templateDropdown.appendTo(templateSelectInput);
+    }
+    function initializeButtons() {
+        const createButtonElement = getElement('createButton');
+        createButtonComponent = new ej.buttons.Button({
+            content: 'Create PDF',
+            isPrimary: true,
+            disabled: true
+        });
+        createButtonComponent.appendTo(createButtonElement);
+        createButtonElement.addEventListener('click', createPdf);
+        const clearButtonElement = getElement('clearButton');
+        clearButtonComponent = new ej.buttons.Button({
+            content: 'Clear'
+        });
+        clearButtonComponent.appendTo(clearButtonElement);
+        clearButtonElement.addEventListener('click', clearSample);
+    }
+    function getElement(id) {
+        const element = document.getElementById(id);
+        if (element === null) {
+            throw new Error('Element with ID "' + id + '" was not found.');
+        }
+        return element;
+    }
+    function getSelectedTemplateValue() {
+        const currentValue = templateDropdown.value;
+        if (currentValue === null || currentValue === undefined) {
+            return '';
+        }
+        return String(currentValue);
+    }
+    function onTemplateChange() {
+        const selectedValue = getSelectedTemplateValue();
+        clearStatus();
+        if (selectedValue === '') {
+            showEmptyPreview();
+            createButtonComponent.disabled = true;
+            createButtonComponent.dataBind();
+            previewType.textContent = 'No template';
+            return;
+        }
+        const selectedTemplate = templates[selectedValue];
+        if (selectedTemplate === undefined) {
+            showEmptyPreview();
+            createButtonComponent.disabled = true;
+            createButtonComponent.dataBind();
+            previewType.textContent = 'No template';
+            showStatus('The selected template is unavailable.', 'error');
+            return;
+        }
+        if (selectedTemplate.type === 'canvas') {
+            previewType.textContent = 'Canvas';
+            renderCanvasTemplate();
+        } else {
+            previewType.textContent = 'HTML';
+            renderHtmlTemplate(selectedTemplate);
+        }
+        createButtonComponent.disabled = false;
+        createButtonComponent.dataBind();
+        showStatus(selectedTemplate.name + ' template loaded successfully.', 'success');
+    }
+    function renderHtmlTemplate(template) {
+        if (!template.html) {
+            throw new Error('HTML content is unavailable for the selected template.');
+        }
+        previewContainer.className = 'preview-container';
+        previewContainer.innerHTML = template.html;
+    }
+    function renderCanvasTemplate() {
+        previewContainer.className = 'preview-container canvas-preview-container';
+        previewContainer.innerHTML = '';
+        const canvas = document.createElement('canvas');
+        canvas.id = 'templateCanvas';
+        canvas.width = 800;
+        canvas.height = 500;
+        canvas.setAttribute('aria-label', 'Canvas template preview');
+        previewContainer.appendChild(canvas);
+        drawCanvasContent(canvas);
+    }
+    function drawCanvasContent(canvas) {
+        const context = canvas.getContext('2d');
+        if (context === null) {
+            throw new Error('The Canvas 2D context is unavailable.');
+        }
+        const gradient = context.createLinearGradient(0, 0, canvas.width, canvas.height);
+        gradient.addColorStop(0, '#0f766e');
+        gradient.addColorStop(0.5, '#0891b2');
+        gradient.addColorStop(1, '#2563eb');
+        context.fillStyle = gradient;
+        context.fillRect(0, 0, canvas.width, canvas.height);
+        context.globalAlpha = 0.15;
+        context.fillStyle = '#ffffff';
+        context.beginPath();
+        context.arc(100, 80, 130, 0, Math.PI * 2);
+        context.fill();
+        context.beginPath();
+        context.arc(730, 450, 190, 0, Math.PI * 2);
+        context.fill();
+        context.globalAlpha = 1;
+        context.fillStyle = '#ffffff';
+        context.textAlign = 'center';
+        context.font = 'bold 52px Arial';
+        context.fillText('Canvas Content', canvas.width / 2, 195);
+        context.font = '24px Arial';
+        context.fillText('This content is created using the Canvas API', canvas.width / 2, 250);
+        context.fillStyle = 'rgba(255,255,255,0.2)';
+        context.fillRect(245, 300, 310, 75);
+        context.fillStyle = '#ffffff';
+        context.font = 'bold 22px Arial';
+        context.fillText('Ready to add into PDF', canvas.width / 2, 347);
+    }
+    async function createPdf() {
+        const selectedValue = getSelectedTemplateValue();
+        if (selectedValue === '') {
+            showStatus('Select a template before creating the PDF.', 'error');
+            return;
+        }
+        const selectedTemplate = templates[selectedValue];
+        if (selectedTemplate === undefined) {
+            showStatus('The selected template is unavailable.', 'error');
+            return;
+        }
+        setCreatingState(true);
+        clearStatus();
+        let pdfDocument = null;
+        try {
+            const imageData = await getTemplateImageData(selectedTemplate);
+            const base64Image = removeDataUrlPrefix(imageData);
+            const image = new ej.pdf.PdfBitmap(base64Image);
+            const originalImageWidth = selectedTemplate.type === 'html' ? image.width / htmlCapturePixelRatio : image.width;
+            const originalImageHeight = selectedTemplate.type === 'html' ? image.height / htmlCapturePixelRatio : image.height;
+            const maximumImageWidth = 760;
+            let drawWidth = originalImageWidth;
+            let drawHeight = originalImageHeight;
+            if (drawWidth > maximumImageWidth) {
+                const scale = maximumImageWidth / drawWidth;
+                drawWidth *= scale;
+                drawHeight *= scale;
+            }
+            const margin = 30;
+            const pageWidth = drawWidth + margin * 2;
+            const pageHeight = drawHeight + margin * 2;
+            const pageOrientation = pageWidth > pageHeight
+                ? ej.pdf.PdfPageOrientation.landscape
+                : ej.pdf.PdfPageOrientation.portrait;
+            pdfDocument = new ej.pdf.PdfDocument();
+            const pageSettings = new ej.pdf.PdfPageSettings(
+                {
+                    size: {
+                        width: pageWidth,
+                        height: pageHeight
+                    },
+                    orientation: pageOrientation,
+                    margins: new ej.pdf.PdfMargins(0)
+                }
+            );
+            const page = pdfDocument.addPage(pageSettings);
+            const graphics = page.graphics;
+            graphics.drawImage(
+                image,
+                {
+                    x: margin,
+                    y: margin,
+                    width: drawWidth,
+                    height: drawHeight
+                }
+            );
+            console.log('Original bitmap size:', image.width, image.height);
+            console.log('Image drawing size:', drawWidth, drawHeight);
+            console.log('Custom PDF page size:', pageWidth, pageHeight);
+            pdfDocument.save(selectedValue + '-template.pdf');
+            showStatus('The PDF document was created successfully.', 'success');
+        }
+        catch (error) {
+            const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred.';
+            console.error('PDF creation failed:', error);
+            showStatus('Unable to create the PDF. ' + errorMessage, 'error');
+        }
+        finally {
+            if (pdfDocument !== null) {
+                pdfDocument.destroy();
+            }
+            setCreatingState(false);
+        }
+    }
+    async function getTemplateImageData(template) {
+        if (template.type === 'canvas') {
+            const canvas = getElement('templateCanvas');
+            return canvas.toDataURL('image/png');
+        }
+        const templateElement = previewContainer.firstElementChild;
+        if (templateElement === null) {
+            throw new Error('The selected HTML template was not found.');
+        }
+        await waitForTemplateResources(templateElement);
+        return convertHtmlElementToPng(templateElement, htmlCapturePixelRatio);
+    }
+    async function convertHtmlElementToPng(element, pixelRatio) {
+        const elementBounds = element.getBoundingClientRect();
+        const elementWidth = Math.ceil(Math.max(elementBounds.width, element.scrollWidth, element.offsetWidth));
+        const elementHeight = Math.ceil(Math.max(elementBounds.height, element.scrollHeight, element.offsetHeight));
+        if (elementWidth <= 0 || elementHeight <= 0) {
+            throw new Error('The selected template has invalid dimensions.');
+        }
+        if (pixelRatio <= 0) {
+            throw new Error('The pixel ratio must be greater than zero.');
+        }
+        const capturePadding = 10;
+        const captureWidth = elementWidth + (capturePadding * 2);
+        const captureHeight = elementHeight + (capturePadding * 2);
+        const clonedElement = element.cloneNode(true);
+        copyComputedStyles(element, clonedElement);
+        clonedElement.style.position = 'static';
+        clonedElement.style.margin = '0';
+        clonedElement.style.width = elementWidth + 'px';
+        clonedElement.style.height = elementHeight + 'px';
+        clonedElement.style.maxWidth = 'none';
+        clonedElement.setAttribute('xmlns', 'http://www.w3.org/1999/xhtml');
+        const serializer = new XMLSerializer();
+        const serializedElement = serializer.serializeToString(clonedElement);
+        const xhtmlContent =
+            '<div xmlns="http://www.w3.org/1999/xhtml" ' +
+            'style="' +
+            'width:' + captureWidth + 'px;' +
+            'height:' + captureHeight + 'px;' +
+            'padding:' + capturePadding + 'px;' +
+            'margin:0;' +
+            'box-sizing:border-box;' +
+            'overflow:visible;' +
+            'background:#ffffff;' +
+            '">' +
+            serializedElement +
+            '</div>';
+        const svgContent =
+            '<svg xmlns="http://www.w3.org/2000/svg" ' +
+            'width="' + captureWidth + '" ' +
+            'height="' + captureHeight + '">' +
+            '<foreignObject width="100%" height="100%">' +
+            xhtmlContent +
+            '</foreignObject>' +
+            '</svg>';
+        const svgDataUrl = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svgContent);
+        const renderedImage = await loadImage(svgDataUrl);
+        const canvas = document.createElement('canvas');
+        canvas.width = Math.ceil(captureWidth * pixelRatio);
+        canvas.height = Math.ceil(captureHeight * pixelRatio);
+        const context = canvas.getContext('2d');
+        if (!context) {
+            throw new Error('The Canvas 2D context is unavailable.');
+        }
+        context.fillStyle = '#ffffff';
+        context.fillRect(0, 0, canvas.width, canvas.height);
+        context.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
+        context.drawImage(renderedImage, 0, 0, captureWidth, captureHeight);
+        return canvas.toDataURL('image/png');
+    }
+    function copyComputedStyles(sourceElement, targetElement) {
+        copyElementStyle(sourceElement, targetElement);
+        const sourceChildren = sourceElement.querySelectorAll('*');
+        const targetChildren = targetElement.querySelectorAll('*');
+        const childrenCount = Math.min(sourceChildren.length, targetChildren.length);
+        for (let index = 0; index < childrenCount; index++) {
+            copyElementStyle(sourceChildren[index], targetChildren[index]);
+        }
+    }
+    function copyElementStyle(sourceElement, targetElement) {
+        const computedStyle = window.getComputedStyle(sourceElement);
+        for (let index = 0; index < computedStyle.length; index++) {
+            const propertyName = computedStyle.item(index);
+            const propertyValue = computedStyle.getPropertyValue(propertyName);
+            const propertyPriority = computedStyle.getPropertyPriority(propertyName);
+            targetElement.style.setProperty(propertyName, propertyValue, propertyPriority);
+        }
+    }
+    function loadImage(source) {
+        return new Promise(
+            function (resolve, reject) {
+                const image = new Image();
+                image.onload = function () {
+                    resolve(image);
+                };
+                image.onerror = function () {
+                    reject(new Error('Unable to render the selected HTML template.'));
+                };
+                image.src = source;
+            }
+        );
+    }
+    function removeDataUrlPrefix(dataUrl) {
+        const separatorIndex = dataUrl.indexOf(',');
+        if (separatorIndex === -1) {
+            return dataUrl;
+        }
+        return dataUrl.substring(separatorIndex + 1);
+    }
+    async function waitForTemplateResources(container) {
+        if (document.fonts && document.fonts.ready) {
+            await document.fonts.ready;
+        }
+        const images = Array.from(container.querySelectorAll('img'));
+        const imagePromises = images.map(function (image) {
+            if (image.complete && image.naturalWidth > 0) {
+                return Promise.resolve();
+            }
+            return new Promise(function (resolve, reject) {
+                function handleLoad() {
+                    removeListeners();
+                    resolve();
+                }
+                function handleError() {
+                    removeListeners();
+                    reject(new Error('Unable to load image: ' + image.src));
+                }
+                function removeListeners() {
+                    image.removeEventListener('load', handleLoad);
+                    image.removeEventListener('error', handleError);
+                }
+                image.addEventListener('load', handleLoad);
+                image.addEventListener('error', handleError);
+            });
+        });
+        await Promise.all(imagePromises);
+    }
+    function setCreatingState(isCreating) {
+        templateDropdown.enabled = !isCreating;
+        clearButtonComponent.disabled = isCreating;
+        createButtonComponent.disabled = isCreating || getSelectedTemplateValue() === '';
+        createButtonComponent.content = isCreating ? 'Creating PDF...' : 'Create PDF';
+        templateDropdown.dataBind();
+        clearButtonComponent.dataBind();
+        createButtonComponent.dataBind();
+    }
+    function clearSample() {
+        templateDropdown.value = '';
+        templateDropdown.dataBind();
+        createButtonComponent.disabled = true;
+        createButtonComponent.content = 'Create PDF';
+        createButtonComponent.dataBind();
+        previewType.textContent = 'No template';
+        showEmptyPreview();
+        clearStatus();
+    }
+    function showEmptyPreview() {
+        previewContainer.className = 'preview-container';
+        previewContainer.innerHTML = '<div class="empty-preview">' + 'Select a template to display the preview.' + '</div>';
+    }
+    function showStatus(message, type) {
+        statusMessage.textContent = message;
+        statusMessage.className = 'status-message status-' + type;
+    }
+    function clearStatus() {
+        statusMessage.textContent = '';
+        statusMessage.className = 'status-message';
+    }
+</script>
+</html>
