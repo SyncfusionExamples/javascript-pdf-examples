@@ -7,6 +7,7 @@ namespace ArabicPdfBlazor.Services;
 /// </summary>
 public class PdfService
 {
+    private bool _pdfSent;
     private const string FileName = "ArabicSample.pdf";
 
     public async Task<string> GenerateAndSaveAsync(IJSRuntime js, string? text = null, int fontSize = 13)
@@ -29,7 +30,20 @@ public class PdfService
     public async Task<string> ExtractTextAsync(IJSRuntime js)
     {
         await using var module = await js.InvokeAsync<IJSObjectReference>("import", "./js/pdf-generator.js");
-        return await module.InvokeAsync<string>("extractTextFromPdf");
+
+        // The JS side caches the bytes, so the package file is only read on the first call.
+        string? base64 = null;
+        if (!_pdfSent)
+        {
+            await using var stream = await FileSystem.OpenAppPackageFileAsync("wwwroot/pdf/ArabicText.pdf");
+            using var ms = new MemoryStream();
+            await stream.CopyToAsync(ms);
+            base64 = Convert.ToBase64String(ms.ToArray());
+        }
+
+        var result = await module.InvokeAsync<string>("extractTextFromPdf", base64);
+        _pdfSent = !result.StartsWith("Error:");
+        return result;
     }
 
     /// <summary>Opens the PDF in an installed viewer (via FileProvider), or falls back to the share sheet.</summary>

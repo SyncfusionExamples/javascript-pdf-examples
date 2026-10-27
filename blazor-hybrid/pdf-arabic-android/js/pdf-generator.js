@@ -13,7 +13,8 @@ import { PdfDataExtractor } from '@syncfusion/ej2-pdf-data-extract';
 const arabicFontUrl =
     'https://cdn.syncfusion.com/content/pdf-resources/noto-naskh-arabic-regular.ttf';
 
-// Embedded in wwwroot/pdf and served from the app package (relative to the WebView base href)
+// Embedded in wwwroot/pdf. Blazor reads it from the app package and passes it in as base64.
+// This relative URL is only a fallback when no bytes are supplied.
 const pdfUrl = 'pdf/ArabicText.pdf';
 
 const defaultArabicText =
@@ -84,10 +85,12 @@ export function getDefaultArabicText() {
  * Extracts the text lines of page 0 from the sample Arabic PDF.
  * The PDF is downloaded once and cached. Errors are logged and returned as text.
  */
-export async function extractTextFromPdf() {
+export async function extractTextFromPdf(pdfBase64) {
     try {
         if (!cachedPdfBytes) {
-            cachedPdfBytes = await fetchAsUint8Array(pdfUrl);
+            cachedPdfBytes = pdfBase64
+                ? Uint8Array.from(atob(pdfBase64), c => c.charCodeAt(0))
+                : await fetchAsUint8Array(pdfUrl);
         }
 
         const pdfDocument = new PdfDocument(cachedPdfBytes);
