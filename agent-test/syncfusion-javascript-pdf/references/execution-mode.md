@@ -1,6 +1,6 @@
 # Execution mode (Mode 2)
 
-Create a real `.pdf` by running a temporary Node.js project. Use only when the user explicitly asks to create/update a PDF file or to run code. Otherwise stay in Mode 1 (code only).
+Create a real `.pdf` by running a temporary Node.js project. Use only when the user explicitly selects Mode 2, asks to run the code, names an output file path, or supplies a PDF to edit. An explicit "mode 1" always wins. Plain "create a PDF" wording stays in Mode 1 (code only).
 
 ## Table of contents
 
