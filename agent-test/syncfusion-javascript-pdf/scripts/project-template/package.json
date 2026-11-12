@@ -1,0 +1,12 @@
+{
+  "name": "ej2-pdf-job",
+  "version": "1.0.0",
+  "private": true,
+  "main": "src/index.js",
+  "description": "Temporary EJ2 PDF execution project (Mode 2). Deleted after the PDF is produced.",
+  "scripts": { "start": "node src/index.js" },
+  "dependencies": {
+    "@syncfusion/ej2-base": "*",
+    "@syncfusion/ej2-pdf": "*"
+  }
+}
