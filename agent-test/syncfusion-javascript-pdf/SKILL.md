@@ -49,8 +49,16 @@ The Syncfusion JavaScript PDF library (`@syncfusion/ej2-pdf`) is a powerful, hig
 
 ## Two modes: choose from the full user intent
 
+**Decide the mode BEFORE doing anything else, in this order:**
+1. **Explicit choice wins.** If the user names a mode ("mode 1", "mode 2", "code only", "just give me the code", "run it", "execute it"), use that mode. Never override it, whatever else the request says.
+2. **Mode 2 only with an explicit execution signal:** the user asks to run/execute the code, asks for an output file or path (e.g. `output/report.pdf`), or supplies an input `.pdf` to modify.
+3. **Otherwise Mode 1 (default).** Phrases such as "create a PDF with...", "generate a PDF", "create a sample" or "build a form" describe what the code should produce. They are NOT a request to run it and do not select Mode 2.
+4. If it is still genuinely ambiguous, use Mode 1 and offer to run it in Mode 2 afterwards. Do not run anything first.
+
+In Mode 1 never create a job folder, run `npm install`, run `node`, or write a `.pdf`.
+
 ### Mode 1: Generate code for the user's project *(default)*
-**Trigger:** "code", "snippet", "how to", "show me", "example", "generate code for", or any request that does not ask for a file.
+**Trigger:** the user says "mode 1", or "code", "snippet", "how to", "show me", "example", "sample code", "generate code for", or any request that does not explicitly ask to run it or to produce a file.
 1. Detect the host (Node or browser, TS or JS, framework).
 2. If missing, tell the user to run `npm install @syncfusion/ej2-pdf`.
 3. Build the code from the `references/*.md` snippets and return it to the user (or add it to their project file).
@@ -59,7 +67,7 @@ The Syncfusion JavaScript PDF library (`@syncfusion/ej2-pdf`) is a powerful, hig
 In a browser, finish the code with `document.save('output.pdf')`, which downloads the file ([references/browser-and-node-io.md](references/browser-and-node-io.md)).
 
 ### Mode 2: Execute in a temporary project *(only on explicit request)*
-**Trigger:** "create a PDF document", "generate a document", "save it to `output/report.pdf`", "open/edit/modify this `.pdf`", "run it", or a file path in the request. Requires Node.js 18+ and `npm`. Not available in a browser: use Mode 1.
+**Trigger:** the user says "mode 2", or asks to "run it"/"execute it", gives an output file path ("save it to `output/report.pdf`"), or supplies a `.pdf` to open/edit/modify. Wording like "create a PDF" alone is NOT a trigger. Requires Node.js 18+ and `npm`. Not available in a browser: use Mode 1.
 
 1. **Create a sample project.** Copy `{skill-root}/syncfusion-javascript-pdf/scripts/project-template/` to `{workspace}/.ej2-pdf-job-{timestamp}/` (`package.json`, `src/index.js`). Replace the body of `buildDocument()` in `src/index.js` using only the `references/*.md` snippets.
 2. **Run the commands in the terminal.**
@@ -75,6 +83,9 @@ In a browser, finish the code with `document.save('output.pdf')`, which download
 |---|---|
 | "Show me how to merge two PDFs" | 1 |
 | "Create output/invoice.pdf with a table" | 2 |
+| "Choose mode 1 to create a sample PDF with form fields" | 1 (explicit choice; return code only) |
+| "Create a PDF with a table" (no path, no "run it") | 1 |
+| "Choose mode 2 to create a PDF with a table" | 2 |
 | "Extract text from `in.pdf`" | 2, `--input in.pdf` |
 | "Create a PDF with a text box" in a web page | 1, `document.save('output.pdf')` |
 
