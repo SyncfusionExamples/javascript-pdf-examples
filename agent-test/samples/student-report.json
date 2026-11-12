@@ -1,0 +1,11 @@
+{
+  "report": { "schoolName": "ABC Public School", "academicYear": "2026-2027", "term": "Term 1" },
+  "students": [
+    { "id": "STU001", "name": "John Doe", "class": "V-A", "marks": { "English": 85, "Mathematics": 92, "Science": 88 }, "overall": { "total": 265, "percentage": 88.33, "grade": "A" } },
+    { "id": "STU002", "name": "Emma Wilson", "class": "V-A", "marks": { "English": 91, "Mathematics": 87, "Science": 94 }, "overall": { "total": 272, "percentage": 90.67, "grade": "A+" } },
+    { "id": "STU003", "name": "Liam Johnson", "class": "V-B", "marks": { "English": 72, "Mathematics": 68, "Science": 75 }, "overall": { "total": 215, "percentage": 71.67, "grade": "B" } },
+    { "id": "STU004", "name": "Olivia Brown", "class": "V-B", "marks": { "English": 79, "Mathematics": 83, "Science": 81 }, "overall": { "total": 243, "percentage": 81.0, "grade": "A" } },
+    { "id": "STU005", "name": "Noah Davis", "class": "V-C", "marks": { "English": 58, "Mathematics": 64, "Science": 61 }, "overall": { "total": 183, "percentage": 61.0, "grade": "C" } },
+    { "id": "STU006", "name": "Sophia Martinez", "class": "V-C", "marks": { "English": 95, "Mathematics": 98, "Science": 96 }, "overall": { "total": 289, "percentage": 96.33, "grade": "A+" } }
+  ]
+}
