@@ -67,7 +67,7 @@ function show(bytes, page = 1) {
     state.displayed = bytes;
     if (state.viewerUrl) URL.revokeObjectURL(state.viewerUrl);
     state.viewerUrl = URL.createObjectURL(new Blob([bytes], { type: 'application/pdf' }));
-    el.viewer.src = `${state.viewerUrl}#page=${page}`;
+    el.viewer.src = `${state.viewerUrl}#page=${page}&toolbar=0&navpanes=0`;
     el.viewer.hidden = false;
 }
 
@@ -86,7 +86,7 @@ function goToMatch(index) {
     state.current = (index + count) % count;
     const { pageIndex, bounds } = state.matches[state.current];
     // Re-assigning the hash makes the viewer jump to the page of the match.
-    el.viewer.src = `${state.viewerUrl}#page=${pageIndex + 1}&zoom=100`;
+    el.viewer.src = `${state.viewerUrl}#page=${pageIndex + 1}&zoom=100&toolbar=0&navpanes=0`;
     setStatus(`Match ${state.current + 1} of ${count}: page ${pageIndex + 1}, ` +
         `x ${bounds.x.toFixed(1)}, y ${bounds.y.toFixed(1)}`);
     updateControls();
