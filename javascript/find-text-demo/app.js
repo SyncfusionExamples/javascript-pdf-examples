@@ -12,7 +12,7 @@ import {
 const $ = (id) => document.getElementById(id);
 const el = {
     search: $('searchText'), status: $('status'), results: $('results'),
-    extracted: $('extracted'), viewer: $('viewer'), info: $('matchInfo'),
+    viewer: $('viewer'), info: $('matchInfo'),
     caseSensitive: $('caseSensitive'), wholeWord: $('wholeWord'),
     generate: $('generateBtn'), extract: $('extractBtn'),
     find: $('findBtn'), highlight: $('highlightBtn'), download: $('downloadBtn'),
@@ -77,7 +77,6 @@ function setPdf(bytes, name) {
     state.matches = [];
     state.current = -1;
     el.results.textContent = 'Search results will appear here...';
-    el.extracted.hidden = true;
     show(bytes);
 }
 
@@ -102,8 +101,10 @@ el.generate.onclick = () => run('Generating PDF…', async () => {
 
 el.extract.onclick = () => run('Extracting text…', async () => {
     const text = await extractText(state.original);
-    el.extracted.textContent = text || '(no text found)';
-    el.extracted.hidden = false;
+    // Extract and Find share the same output area; extracting clears the matches, which disables Highlight.
+    state.matches = [];
+    state.current = -1;
+    el.results.textContent = text || '(no text found)';
     setStatus(`Extracted ${text.length} characters.`);
 });
 
