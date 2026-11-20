@@ -94,7 +94,6 @@ function goToMatch(index) {
 
 el.generate.onclick = () => run('Generating PDF…', async () => {
     const bytes = await generateArabicPdf(DEFAULT_ARABIC_TEXT);
-    setPdf(bytes, 'arabic.pdf');
     downloadPdf(bytes, 'arabic.pdf');
     setStatus('Arabic PDF generated and downloaded.');
 });
