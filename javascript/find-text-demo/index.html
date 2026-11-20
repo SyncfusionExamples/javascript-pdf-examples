@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>PDF Find Text Demo</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <main class="card">
+        <h1>Arabic PDF with @syncfusion/ej2-pdf</h1>
+
+        <label for="sourceText">Arabic text (used to generate a PDF)</label>
+        <textarea id="sourceText" dir="rtl" rows="6"></textarea>
+
+        <div class="row">
+            <button id="generateBtn" type="button">Generate PDF</button>
+            <button id="sampleBtn" type="button">Load Sample PDF</button>
+            <label class="file-btn" for="fileInput">Open PDF…</label>
+            <input id="fileInput" type="file" accept="application/pdf" hidden>
+            <button id="extractBtn" type="button" disabled>Extract Text</button>
+        </div>
+
+        <label for="searchText">Search Text</label>
+        <input id="searchText" type="text" dir="auto" autocomplete="off">
+        <div class="row">
+            <label class="check"><input id="caseSensitive" type="checkbox"> Case sensitive</label>
+            <label class="check"><input id="wholeWord" type="checkbox"> Whole word</label>
+        </div>
+
+        <div class="row">
+            <button id="findBtn" type="button" disabled>Find Text</button>
+            <button id="highlightBtn" type="button" disabled>Highlight Search Results</button>
+            <button id="downloadBtn" type="button" disabled>Download PDF</button>
+        </div>
+
+        <div id="status" class="status" role="status" aria-live="polite">Ready</div>
+
+        <div class="row nav">
+            <button id="prevBtn" type="button" disabled>&laquo; Previous</button>
+            <span id="matchInfo">Matches: 0</span>
+            <button id="nextBtn" type="button" disabled>Next &raquo;</button>
+        </div>
+
+        <pre id="results" dir="auto">Search results will appear here...</pre>
+        <pre id="extracted" dir="auto" hidden></pre>
+
+        <iframe id="viewer" title="PDF viewer" hidden></iframe>
+    </main>
+    <script type="module" src="app.js"></script>
+</body>
+</html>
