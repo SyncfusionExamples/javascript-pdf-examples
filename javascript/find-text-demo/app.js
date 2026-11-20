@@ -11,10 +11,10 @@ import {
 
 const $ = (id) => document.getElementById(id);
 const el = {
-    source: $('sourceText'), search: $('searchText'), status: $('status'), results: $('results'),
+    search: $('searchText'), status: $('status'), results: $('results'),
     extracted: $('extracted'), viewer: $('viewer'), info: $('matchInfo'),
     caseSensitive: $('caseSensitive'), wholeWord: $('wholeWord'),
-    generate: $('generateBtn'), sample: $('sampleBtn'), file: $('fileInput'), extract: $('extractBtn'),
+    generate: $('generateBtn'), extract: $('extractBtn'),
     find: $('findBtn'), highlight: $('highlightBtn'), download: $('downloadBtn'),
     prev: $('prevBtn'), next: $('nextBtn')
 };
@@ -28,7 +28,6 @@ const state = {
     viewerUrl: null
 };
 
-el.source.value = DEFAULT_ARABIC_TEXT;
 el.search.value = DEFAULT_SEARCH_TEXT;
 
 function setStatus(message, kind = '') {
@@ -38,6 +37,7 @@ function setStatus(message, kind = '') {
 
 function updateControls() {
     const hasPdf = !!state.original;
+    el.generate.disabled = false;
     el.extract.disabled = !hasPdf;
     el.find.disabled = !hasPdf;
     el.highlight.disabled = !hasPdf || state.matches.length === 0;
@@ -50,7 +50,7 @@ function updateControls() {
 }
 
 async function run(label, task) {
-    const buttons = [el.generate, el.sample, el.extract, el.find, el.highlight, el.download, el.prev, el.next];
+    const buttons = [el.generate, el.extract, el.find, el.highlight, el.download, el.prev, el.next];
     buttons.forEach((b) => (b.disabled = true));
     setStatus(label, 'busy');
     try {
@@ -94,24 +94,11 @@ function goToMatch(index) {
 }
 
 el.generate.onclick = () => run('Generating PDF…', async () => {
-    setPdf(await generateArabicPdf(el.source.value), 'arabic.pdf');
-    setStatus('PDF generated.');
+    const bytes = await generateArabicPdf(DEFAULT_ARABIC_TEXT);
+    setPdf(bytes, 'arabic.pdf');
+    downloadPdf(bytes, 'arabic.pdf');
+    setStatus('Arabic PDF generated and downloaded.');
 });
-
-el.sample.onclick = () => run('Loading sample PDF…', async () => {
-    setPdf(await loadSamplePdf(), 'sample.pdf');
-    setStatus('Sample PDF loaded.');
-});
-
-el.file.onchange = () => {
-    const file = el.file.files[0];
-    el.file.value = '';
-    if (!file) return;
-    run('Opening PDF…', async () => {
-        setPdf(new Uint8Array(await file.arrayBuffer()), file.name);
-        setStatus(`Loaded ${file.name}.`);
-    });
-};
 
 el.extract.onclick = () => run('Extracting text…', async () => {
     const text = await extractText(state.original);
@@ -151,17 +138,20 @@ el.highlight.onclick = () => run('Highlighting…', async () => {
     setStatus(`Highlighted ${state.matches.length} match(es). Use Download PDF to save.`);
 });
 
-el.download.onclick = () => {
-    const blob = new Blob([state.displayed], { type: 'application/pdf' });
+function downloadPdf(bytes, fileName) {
+    const blob = new Blob([bytes], { type: 'application/pdf' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = state.displayed === state.original ? state.fileName : state.fileName.replace(/\.pdf$/i, '') + '-highlighted.pdf';
+    a.download = fileName;
     document.body.appendChild(a);
     a.click();
     a.remove();
     URL.revokeObjectURL(url);
-};
+}
+
+el.download.onclick = () => downloadPdf(state.displayed,
+    state.displayed === state.original ? state.fileName : state.fileName.replace(/\.pdf$/i, '') + '-highlighted.pdf');
 
 el.prev.onclick = () => goToMatch(state.current - 1);
 el.next.onclick = () => goToMatch(state.current + 1);
