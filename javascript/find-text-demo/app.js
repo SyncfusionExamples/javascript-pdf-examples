@@ -15,7 +15,7 @@ const el = {
     viewer: $('viewer'), info: $('matchInfo'),
     caseSensitive: $('caseSensitive'), wholeWord: $('wholeWord'),
     generate: $('generateBtn'), extract: $('extractBtn'),
-    find: $('findBtn'), highlight: $('highlightBtn'), download: $('downloadBtn'),
+    findHighlight: $('findHighlightBtn'), download: $('downloadBtn'),
     prev: $('prevBtn'), next: $('nextBtn')
 };
 
@@ -39,8 +39,7 @@ function updateControls() {
     const hasPdf = !!state.original;
     el.generate.disabled = false;
     el.extract.disabled = !hasPdf;
-    el.find.disabled = !hasPdf;
-    el.highlight.disabled = !hasPdf || state.matches.length === 0;
+    el.findHighlight.disabled = !hasPdf;
     el.download.disabled = !state.displayed;
     el.prev.disabled = state.matches.length < 2;
     el.next.disabled = state.matches.length < 2;
@@ -50,7 +49,7 @@ function updateControls() {
 }
 
 async function run(label, task) {
-    const buttons = [el.generate, el.extract, el.find, el.highlight, el.download, el.prev, el.next];
+    const buttons = [el.generate, el.extract, el.findHighlight, el.download, el.prev, el.next];
     buttons.forEach((b) => (b.disabled = true));
     setStatus(label, 'busy');
     try {
@@ -100,42 +99,36 @@ el.generate.onclick = () => run('Generating PDF…', async () => {
 
 el.extract.onclick = () => run('Extracting text…', async () => {
     const text = await extractText(state.original);
-    // Extract and Find share the same output area; extracting clears the matches, which disables Highlight.
     state.matches = [];
     state.current = -1;
     el.results.textContent = text || '(no text found)';
     setStatus(`Extracted ${text.length} characters.`);
 });
 
-async function doFind() {
+el.findHighlight.onclick = () => run('Finding and highlighting…', async () => {
     const { pageCount, matches } = await findText(state.original, el.search.value, {
         caseSensitive: el.caseSensitive.checked,
         wholeWord: el.wholeWord.checked
     });
     state.matches = matches;
-    state.current = -1;
+    state.current = matches.length ? 0 : -1;
+
     const lines = [`Search text: "${el.search.value}"`, `Pages searched: ${pageCount}`, `Result count: ${matches.length}`, ''];
     matches.forEach((m, i) => lines.push(
         `#${i + 1} page ${m.pageIndex + 1}: { x: ${m.bounds.x.toFixed(2)}, y: ${m.bounds.y.toFixed(2)}, ` +
         `width: ${m.bounds.width.toFixed(2)}, height: ${m.bounds.height.toFixed(2)} }`));
     el.results.textContent = matches.length ? lines.join('\n') : lines.join('\n') + 'No matches found.';
-    if (state.displayed !== state.original) show(state.original);
-    return matches.length;
-}
 
-el.find.onclick = () => run('Searching…', async () => {
-    const count = await doFind();
-    setStatus(`Total matches found: ${count}`);
-    if (count) goToMatch(0);
-});
+    if (!matches.length) {
+        show(state.original);
+        setStatus(`No matches found for "${el.search.value}".`);
+        return;
+    }
 
-el.highlight.onclick = () => run('Highlighting…', async () => {
-    if (!state.matches.length) await doFind();
-    if (!state.matches.length) throw new Error(`No matches found for "${el.search.value}".`);
-    const first = state.matches[0].pageIndex + 1;
-    show(await highlightMatches(state.original, state.matches), first);
-    state.current = 0;
-    setStatus(`Highlighted ${state.matches.length} match(es). Use Download PDF to save.`);
+    const firstPage = matches[0].pageIndex + 1;
+    const highlightedBytes = await highlightMatches(state.original, matches);
+    show(highlightedBytes, firstPage);
+    setStatus(`Found and highlighted ${matches.length} match(es). Use Download PDF to save.`);
 });
 
 function downloadPdf(bytes, fileName) {
@@ -155,7 +148,7 @@ el.download.onclick = () => downloadPdf(state.displayed,
 
 el.prev.onclick = () => goToMatch(state.current - 1);
 el.next.onclick = () => goToMatch(state.current + 1);
-el.search.addEventListener('keydown', (e) => { if (e.key === 'Enter' && !el.find.disabled) el.find.click(); });
+el.search.addEventListener('keydown', (e) => { if (e.key === 'Enter' && !el.findHighlight.disabled) el.findHighlight.click(); });
 
 updateControls();
 run('Loading sample PDF…', async () => {
